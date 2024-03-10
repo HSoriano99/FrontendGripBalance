@@ -19,6 +19,7 @@ export const Header = () => {
   const dispatch = useDispatch();
   const [smShow, setSmShow] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
+  const [error2Show, setError2Show] = useState(false);
   const [modalForm, setModalForm] = useState();
   const [registerData, setRegisterData] = useState({
     username: "",
@@ -52,6 +53,8 @@ export const Header = () => {
   };
 
   const registerHandler = (event) => {
+    setError2Show(false);
+    setErrorShow(false);
     setRegisterData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
@@ -64,14 +67,14 @@ export const Header = () => {
       email: registerData.email,
       password: registerData.password,
     };
-    //comprobamos que no existen inputs vacios para el registro y en consecuencia, hacemos la llamada de registro
+    
     if (registerData.password !== "" && registerData.email !== "" && registerData.username !== ""){
 
         clientRegister(registerData).then(() => {
         //hacemos login con el usuario recien creado cuando tengamos la respuesta de nuestro registro correctamente
         userLogin(credentials)
         .then((token) => {
-            console.log(token)
+            
             const decodedToken = jwtDecode(token);
 
             const data = {
@@ -85,7 +88,7 @@ export const Header = () => {
             setSmShow(false);
 
         }).catch((err) => setErrorShow(true));
-    })
+    }).catch((err) => setError2Show(true));
   }else {
     setErrorShow(true);
   }}
@@ -95,6 +98,22 @@ export const Header = () => {
       ...prevState,
       [event.target.name]: event.target.value,
     }));
+  };
+
+  const buttonLoginHandler = () => {
+    userLogin(credentials)
+      .then((token) => {
+
+        const decodedToken = jwtDecode(token);
+
+        const data = {
+          token: token,
+          userData: decodedToken,
+        };
+        dispatch(login({ credentials: data }));
+        // navigate("/profile");
+        setSmShow(false);
+      }).catch((err) => setErrorShow(true));
   };
 
   useEffect(() => {
@@ -149,6 +168,9 @@ export const Header = () => {
                   name={"password"}
                   handler={loginHandler}
                 ></CustomInput>
+                {errorShow ? (
+                    <p className="error">Nope! Try again</p>
+                ): null}
               </div>
             ) : null}
             {modalForm === "register" ? (
@@ -172,7 +194,10 @@ export const Header = () => {
                   handler={registerHandler}
                 ></CustomInput>
                 {errorShow ? (
-                    <h3 className="error">Nope! Try again</h3>
+                    <p className="error">Nope! Try again</p>
+                ): null}
+                {error2Show ? (
+                    <p className="error">Username or email already in use!</p>
                 ): null}
               </div>
             ) : null}
@@ -184,9 +209,9 @@ export const Header = () => {
               </Button>
             ) : null}
             {modalForm === "login" ? (
-              <Button variant="success" href="/profile">
+               <Button variant="success" onClick={() => buttonLoginHandler()}>
                 Login
-              </Button>
+             </Button>
             ) : null}
           </div>
         </Modal>
