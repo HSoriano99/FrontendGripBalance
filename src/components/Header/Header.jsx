@@ -9,13 +9,27 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, userData } from "../../pages/userSlice";
+import { login, logout, userData } from "../../pages/userSlice";
+import { CustomInput } from "../../components/CustomInput/CustomInput";
+import { clientRegister, userLogin } from "../../services/ApiCalls";
+import { jwtDecode } from "jwt-decode";
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [smShow, setSmShow] = useState(false);
+  const [errorShow, setErrorShow] = useState(false);
   const [modalForm, setModalForm] = useState();
+  const [registerData, setRegisterData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+
   //________________________________________________________________
   const userRdxData = useSelector(userData);
 
@@ -34,15 +48,70 @@ export const Header = () => {
     const form = e.form;
     setModalForm(form);
     setSmShow(true);
+    setErrorShow(false);
   };
 
-  useEffect(()=>{
-    console.log(smShow)
-  }, [smShow]);
+  const registerHandler = (event) => {
+    setRegisterData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
-  useEffect(()=>{
-    console.log(modalForm)
+  const buttonRegisterHandler = () => {
+    //definimos las credenciales para el futuro login con los datos de registro
+    const credentials = {
+      email: registerData.email,
+      password: registerData.password,
+    };
+    //comprobamos que no existen inputs vacios para el registro y en consecuencia, hacemos la llamada de registro
+    if (registerData.password !== "" && registerData.email !== "" && registerData.username !== ""){
+
+        clientRegister(registerData).then(() => {
+        //hacemos login con el usuario recien creado cuando tengamos la respuesta de nuestro registro correctamente
+        userLogin(credentials)
+        .then((token) => {
+            console.log(token)
+            const decodedToken = jwtDecode(token);
+
+            const data = {
+            token: token,
+            userData: decodedToken,
+            };
+            
+            //guardamos al igual que en el login nuestros datos de usuario logeado 
+            dispatch(login({ credentials: data }));
+            // navigate("/profile");
+            setSmShow(false);
+
+        }).catch((err) => setErrorShow(true));
+    })
+  }else {
+    setErrorShow(true);
+  }}
+
+  const loginHandler = (event) => {
+    setCredentials((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(errorShow);
+  }, [errorShow]);
+
+  useEffect(() => {
+    console.log(modalForm);
   }, [modalForm]);
+
+  useEffect(() => {
+    console.log(registerData);
+  }, [registerData]);
+
+  useEffect(() => {
+    console.log(credentials);
+  }, [credentials]);
 
   return (
     <div className="headerDiv">
@@ -51,29 +120,74 @@ export const Header = () => {
           size="sm"
           show={smShow}
           onHide={() => setSmShow(false)}
-          aria-labelledby="example-modal-sizes-title-sm">
+          aria-labelledby="example-modal-sizes-title-sm"
+        >
           <Modal.Header closeButton>
             {modalForm === "login" ? (
               <Modal.Title id="example-modal-sizes-title-sm">
-                SIGN IN !
+                Welcome back!
               </Modal.Title>
             ) : null}
             {modalForm === "register" ? (
               <Modal.Title id="example-modal-sizes-title-sm">
-                REGISTER NOW !
+                Join us today!
               </Modal.Title>
             ) : null}
           </Modal.Header>
           <Modal.Body>
-            Vas a tatuarte más o quieres ver tus citas confirmadas?
+            {modalForm === "login" ? (
+              <div className="LoginForm">
+                <CustomInput
+                  placeholder={"Email"}
+                  type={"email"}
+                  name={"email"}
+                  handler={loginHandler}
+                ></CustomInput>
+                <CustomInput
+                  placeholder={"Password"}
+                  type={"password"}
+                  name={"password"}
+                  handler={loginHandler}
+                ></CustomInput>
+              </div>
+            ) : null}
+            {modalForm === "register" ? (
+              <div className="RegisterForm">
+                <CustomInput
+                  placeholder={"Username"}
+                  type={"username"}
+                  name={"username"}
+                  handler={registerHandler}
+                ></CustomInput>
+                <CustomInput
+                  placeholder={"Email"}
+                  type={"email"}
+                  name={"email"}
+                  handler={registerHandler}
+                ></CustomInput>
+                <CustomInput
+                  placeholder={"Password"}
+                  type={"password"}
+                  name={"password"}
+                  handler={registerHandler}
+                ></CustomInput>
+                {errorShow ? (
+                    <h3 className="error">Nope! Try again</h3>
+                ): null}
+              </div>
+            ) : null}
           </Modal.Body>
           <div className="modalButtons">
-            <Button variant="secondary" href="/profile">
-              MIS CITAS
-            </Button>
-            <Button variant="dark" onClick={() => setSmShow(false)}>
-              MÁS TINTA
-            </Button>
+            {modalForm === "register" ? (
+              <Button variant="success" onClick={() => buttonRegisterHandler()}>
+                Create new account
+              </Button>
+            ) : null}
+            {modalForm === "login" ? (
+              <Button variant="success" href="/profile">
+                Login
+              </Button>
+            ) : null}
           </div>
         </Modal>
       </div>
@@ -91,11 +205,19 @@ export const Header = () => {
                     <>
                       <NavDropdown.Item
                         name="login"
-                        onClick={(e) => formHandler({ form: e.target.getAttribute("name") })}>Login
+                        onClick={(e) =>
+                          formHandler({ form: e.target.getAttribute("name") })
+                        }
+                      >
+                        Login
                       </NavDropdown.Item>
                       <NavDropdown.Item
                         name="register"
-                        onClick={(e) => formHandler({ form: e.target.getAttribute("name") })}>Register
+                        onClick={(e) =>
+                          formHandler({ form: e.target.getAttribute("name") })
+                        }
+                      >
+                        Register
                       </NavDropdown.Item>
                     </>
                   ) : decoded.userRoles === "admin" ? (
@@ -131,3 +253,4 @@ export const Header = () => {
     </div>
   );
 };
+
