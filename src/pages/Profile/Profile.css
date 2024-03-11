@@ -1,10 +1,21 @@
 .profileData {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    margin-top: 2em;
+    align-items: center;
+    gap: 2em;
   }
   
   .profileCard {
-    width: 300px; /* Tamaño fijo para pantallas grandes */
+    width: 600px; /* Tamaño fijo para pantallas grandes */
+    gap: 0.5em;
+  }
+
+  .profileEditForm {
+    width: 600px; /* Tamaño fijo para pantallas grandes */
+    gap: 0.5em;
+    margin-bottom: 2em;
   }
 
   .profileCardUsername{
@@ -19,8 +30,8 @@
   }
   
   .profileImage {
-    width: 150px; /* Tamaño de la imagen */
-    height: 150px; /* Tamaño de la imagen */
+    width: 250px; /* Tamaño de la imagen */
+    height: 250px; /* Tamaño de la imagen */
     object-fit: cover; /* Ajusta la imagen */
     border-radius: 50%; /* Hace la imagen redonda */
   }
@@ -43,6 +54,13 @@
       width: 100%; /* Utiliza todo el ancho disponible */
       margin: 0 10px; /* Añade un margen a los lados */
     }
+    .profileImage {
+        width: 200px; 
+        height: 200px;
+    }
+    .profileEditForm {
+        width: 400px; /* Tamaño fijo para pantallas grandes */
+    }
   }
   
   /* Estilos para pantallas pequeñas */
@@ -50,6 +68,13 @@
     .profileCard {
       width: 100%; /* Utiliza todo el ancho disponible */
       margin: 0 5px; /* Añade un margen a los lados */
+    }
+    .profileImage {
+        width: 150px; 
+        height: 150px;
+    }
+    .profileEditForm {
+        width: 300px; /* Tamaño fijo para pantallas grandes */
     }
   }
   
