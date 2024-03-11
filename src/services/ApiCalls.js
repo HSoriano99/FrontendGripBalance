@@ -14,3 +14,15 @@ export const userLogin = async (credentials) => {
 
     return res.data;
 };
+
+export const getClientProfile = async (token, id, carPage, carLimit, inscPage, inscLimit) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    }
+    const res = await axios.get(`${API_URL}/api/users/get-complete-user/${id}?carPage=${carPage}&carLimit=${carLimit}&inscPage=${inscPage}&inscLimit=${inscLimit}`, config);
+   
+    return res.data;
+
+};

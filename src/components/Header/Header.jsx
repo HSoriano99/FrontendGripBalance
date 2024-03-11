@@ -116,27 +116,11 @@ export const Header = () => {
       }).catch((err) => setErrorShow(true));
   };
 
-  useEffect(() => {
-    console.log(errorShow);
-  }, [errorShow]);
-
-  useEffect(() => {
-    console.log(modalForm);
-  }, [modalForm]);
-
-  useEffect(() => {
-    console.log(registerData);
-  }, [registerData]);
-
-  useEffect(() => {
-    console.log(credentials);
-  }, [credentials]);
-
   return (
     <div className="headerDiv">
       <div className="modalDiv">
         <Modal
-          size="sm"
+          size="m"
           show={smShow}
           onHide={() => setSmShow(false)}
           aria-labelledby="example-modal-sizes-title-sm"

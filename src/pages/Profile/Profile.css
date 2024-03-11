@@ -1,0 +1,55 @@
+.profileData {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .profileCard {
+    width: 300px; /* Tamaño fijo para pantallas grandes */
+  }
+
+  .profileCardUsername{
+    text-align: center;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+  }
+  
+  .profileImage {
+    width: 150px; /* Tamaño de la imagen */
+    height: 150px; /* Tamaño de la imagen */
+    object-fit: cover; /* Ajusta la imagen */
+    border-radius: 50%; /* Hace la imagen redonda */
+  }
+
+  .profileButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
+
+  .garageButton {
+    border-radius: 10px;
+    width: 6em;
+  }
+  
+  /* Estilos para pantallas medianas */
+  @media (max-width: 768px) {
+    .profileCard {
+      width: 100%; /* Utiliza todo el ancho disponible */
+      margin: 0 10px; /* Añade un margen a los lados */
+    }
+  }
+  
+  /* Estilos para pantallas pequeñas */
+  @media (max-width: 576px) {
+    .profileCard {
+      width: 100%; /* Utiliza todo el ancho disponible */
+      margin: 0 5px; /* Añade un margen a los lados */
+    }
+  }
+  
