@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getClientProfile } from "../../services/ApiCalls";
+import { getClientProfile, updateUser } from "../../services/ApiCalls";
 import { userData } from "../userSlice";
 import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
@@ -20,6 +20,8 @@ export const Profile = () => {
   const [profileData, setProfileData] = useState({});
   const [updateUserData, setUpdateUserData] = useState({});
   const [profileEditable, setProfileEditable] = useState(false);
+  const [errorShow, setErrorShow] = useState(false);
+  const [updateShow, setUpdateShow] = useState(false);
 
   const [carPage, setCarPage] = useState(1);
   const [carLimit, setCarLimit] = useState(1);
@@ -44,6 +46,12 @@ export const Profile = () => {
     }
   }, []);
 
+  const editHandlerUser = (event) => {
+    setErrorShow(false);
+    setUpdateShow(false);
+    setProfileEditable(!profileEditable);
+  };
+
   const inputHandlerUser = (event) => {
     setUpdateUserData((prevState) => ({
       ...prevState,
@@ -51,7 +59,85 @@ export const Profile = () => {
     }));
   };
 
-  useEffect(() => {console.log(updateUserData)},[updateUserData]);
+  const buttonHandlerSave = () => {
+    try {
+      setErrorShow(false);
+      setUpdateShow(false);
+
+      if (
+        updateUserData.username === "" ||
+        updateUserData.email === "" ||
+        updateUserData.first_name === "" ||
+        updateUserData.last_name === "" ||
+        updateUserData.phone_number === ""
+      ) {
+        const updateUserData = {
+          username: profileData.user.username,
+          email: profileData.user.email,
+          first_name: profileData.user.first_name,
+          last_name: profileData.user.last_name,
+          phone_number: profileData.user.phone_number,
+        };
+
+        updateUser(token, id, updateUserData)
+          .then((res) => {
+            console.log(res);
+
+            getClientProfile(
+              token,
+              id,
+              carPage,
+              carLimit,
+              inscPage,
+              inscLimit
+            ).then((res) => {
+              console.log(res);
+              setProfileData(res);
+              setCarCount(res.userCarsCount);
+              setInscCount(res.userInscsCount);
+              setProfileEditable(false);
+              setUpdateShow(true);
+            });
+          })
+          .catch((err) => {
+            setErrorShow(true);
+          });
+      } else {
+        updateUser(token, id, updateUserData)
+          .then((res) => {
+            console.log(res);
+
+            getClientProfile(
+              token,
+              id,
+              carPage,
+              carLimit,
+              inscPage,
+              inscLimit
+            ).then((res) => {
+              console.log(res);
+              setProfileData(res);
+              setCarCount(res.userCarsCount);
+              setInscCount(res.userInscsCount);
+              setProfileEditable(false);
+              setUpdateShow(true);
+            });
+          })
+          .catch((err) => {
+            setErrorShow(true);
+          });
+      }
+    } catch (error) {
+      setErrorShow(true);
+    }
+  };
+
+  useEffect(() => {
+    console.log(updateUserData);
+  }, [updateUserData]);
+  useEffect(() => {
+    console.log(profileEditable);
+  }, [profileEditable]);
 
   return (
     <div className="profileData">
@@ -93,7 +179,12 @@ export const Profile = () => {
             </svg>
             <p>Garage</p>
           </Button>
-          <Button className="garageButton" variant="dark" href="#profileEditForm" onClick={()=> setProfileEditable(!profileEditable)}>
+          <Button
+            className="garageButton"
+            variant="dark"
+            href="#profileEditForm"
+            onClick={() => editHandlerUser()}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -120,9 +211,12 @@ export const Profile = () => {
             <p>Events</p>
           </Button>
         </Card.Body>
+        {updateShow === true ? (
+          <p className="update">Yes! Updated successfully.</p>
+        ) : null}
       </Card>
       <div className="profileDetails">
-        {profileEditable ? (
+        {profileEditable === true ? (
           <Card className="profileEditForm" id="profileEditForm">
             <CustomInput
               placeholder={profileData.user?.username || "Username"}
@@ -154,7 +248,10 @@ export const Profile = () => {
               name={"phone_number"}
               handler={inputHandlerUser}
             ></CustomInput>
-            <Button variant="success" >
+            {errorShow ? (
+              <p className="error">Nope! Nothing to update</p>
+            ) : null}
+            <Button variant="success" onClick={() => buttonHandlerSave()}>
               Save
             </Button>
           </Card>

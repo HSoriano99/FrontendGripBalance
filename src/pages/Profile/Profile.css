@@ -46,6 +46,7 @@
   .garageButton {
     border-radius: 10px;
     width: 6em;
+   
   }
   
   /* Estilos para pantallas medianas */
@@ -77,4 +78,14 @@
         width: 300px; /* Tamaño fijo para pantallas grandes */
     }
   }
+
+  .error{
+    color: rgba(255, 0, 0, 0.711);
+}
+
+.update{
+    color: rgba(5, 151, 64, 0.934);
+   
+    text-align: center;
+}
   

@@ -10,7 +10,6 @@ export const clientRegister = async (registerData) => {
 
 export const userLogin = async (credentials) => {
     const res = await axios.post(`${API_URL}/api/users/login`, credentials);
-    console.log(res.data);
 
     return res.data;
 };
@@ -26,3 +25,14 @@ export const getClientProfile = async (token, id, carPage, carLimit, inscPage, i
     return res.data;
 
 };
+
+export const updateUser = async (token, id, data) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    }
+    const res = await axios.patch(`${API_URL}/api/users/update-user/${id}`, data, config);
+    console.log(res);
+    return res;
+}
