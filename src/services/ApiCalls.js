@@ -43,7 +43,7 @@ export const updatePassword = async (token, id, data) => {
             Authorization: 'Bearer ' + token
         }
     }
-    const res = await axios.patch(`${API_URL}/api/users/update-passsword/${id}`, data, config);
+    const res = await axios.patch(`${API_URL}/api/users/update-password/${id}`, data, config);
     console.log(res);
     return res;
 }

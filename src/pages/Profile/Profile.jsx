@@ -27,6 +27,7 @@ export const Profile = () => {
   const [profileEditable, setProfileEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
+  const [error2Show, setError2Show] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
 
   const [carPage, setCarPage] = useState(1);
@@ -62,6 +63,7 @@ export const Profile = () => {
 
   const editHandlerPassword = (event) => {
     setErrorShow(false);
+    setError2Show(false);
     setUpdateShow(false);
     setProfileEditable(false);
     setPasswordEditable(true);
@@ -165,14 +167,21 @@ export const Profile = () => {
   };
 
   const buttonHandlerSavePassword = (event) => {
-    try {
-      updatePassword(token, id, updatePasswordData).then(() => {
+
+    setErrorShow(false);
+    setError2Show(false);
+    setUpdateShow(false);
+
+    if (!updatePasswordData.current_password  || updatePasswordData.current_password === "" || !updatePasswordData.new_password || updatePasswordData.new_password === "") {
+      setError2Show(true)
+    } else {
+       updatePassword(token, id, updatePasswordData).then(() => {
         setProfileEditable(false);
+        setPasswordEditable(false);
         setUpdateShow(true);
-      });
-    } catch (error) {
-      setErrorShow(true);
+      }).catch((err) => {setErrorShow(true)})
     }
+     
   };
 
   useEffect(() => {
@@ -316,6 +325,7 @@ export const Profile = () => {
               name={"new_password"}
               handler={inputHandlerPassword}
             ></CustomInput>
+            {error2Show ? <p className="error">Nope! Please, complete all fields!</p> : null}
             {errorShow ? <p className="error">Nope! Try again!</p> : null}
             <Button
               variant="success"
