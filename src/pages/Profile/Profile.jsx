@@ -19,7 +19,9 @@ export const Profile = () => {
 
   const [profileData, setProfileData] = useState({});
   const [updateUserData, setUpdateUserData] = useState({});
+  const [updatePassword, setUpdatePassword] = useState({});
   const [profileEditable, setProfileEditable] = useState(false);
+  const [passwordEditable, setPasswordEditable] = useState(false);
   const [errorShow, setErrorShow] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
 
@@ -50,10 +52,25 @@ export const Profile = () => {
     setErrorShow(false);
     setUpdateShow(false);
     setProfileEditable(!profileEditable);
+    setPasswordEditable(false);
+  };
+
+  const editHandlerPassword = (event) => {
+    setErrorShow(false);
+    setUpdateShow(false);
+    setProfileEditable(false);
+    setPasswordEditable(true);
   };
 
   const inputHandlerUser = (event) => {
     setUpdateUserData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const inputHandlerPassword = (event) => {
+    setUpdatePassword((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
     }));
@@ -132,9 +149,16 @@ export const Profile = () => {
     }
   };
 
+  const buttonHandlerSavePassword = (event) => {
+    setUpdatePassword((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
   useEffect(() => {
-    console.log(updateUserData);
-  }, [updateUserData]);
+    console.log(updatePassword);
+  }, [updatePassword]);
   useEffect(() => {
     console.log(profileEditable);
   }, [profileEditable]);
@@ -218,6 +242,9 @@ export const Profile = () => {
       <div className="profileDetails">
         {profileEditable === true ? (
           <Card className="profileEditForm" id="profileEditForm">
+            <Button variant="primary" onClick={() => editHandlerPassword()}>
+              Change your password here!
+            </Button>
             <CustomInput
               placeholder={profileData.user?.username || "Username"}
               type={"username"}
@@ -249,13 +276,35 @@ export const Profile = () => {
               handler={inputHandlerUser}
             ></CustomInput>
             {errorShow ? (
-              <p className="error">Nope! Nothing to update</p>
+              <p className="error">Nope! Nothing to update.</p>
             ) : null}
             <Button variant="success" onClick={() => buttonHandlerSave()}>
               Save
             </Button>
           </Card>
         ) : null}
+        {passwordEditable ===true? (
+            <Card className="profileEditForm" id="profileEditForm">
+              <CustomInput
+              placeholder={"Current Password"}
+              type={"password"}
+              name={"current_password"}
+              handler={inputHandlerPassword}
+            ></CustomInput>
+            <CustomInput
+              placeholder={"New Password"}
+              type={"password"}
+              name={"new_password"}
+              handler={inputHandlerPassword}
+            ></CustomInput>
+            {errorShow ? (
+              <p className="error">Nope! Try again!</p>
+            ) : null}
+            <Button variant="success" onClick={() => buttonHandlerSavePassword()}>
+              Save new password
+            </Button>
+             </Card>
+            ): null}
       </div>
     </div>
   );

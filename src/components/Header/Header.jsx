@@ -153,7 +153,7 @@ export const Header = () => {
                   handler={loginHandler}
                 ></CustomInput>
                 {errorShow ? (
-                    <p className="error">Nope! Try again</p>
+                    <p className="error">Nope! Try again!</p>
                 ): null}
               </div>
             ) : null}
@@ -178,7 +178,7 @@ export const Header = () => {
                   handler={registerHandler}
                 ></CustomInput>
                 {errorShow ? (
-                    <p className="error">Nope! Try again</p>
+                    <p className="error">Nope! Try again!</p>
                 ): null}
                 {error2Show ? (
                     <p className="error">Username or email already in use!</p>
