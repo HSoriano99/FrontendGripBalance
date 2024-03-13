@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  getClientProfile,
-  updatePassword,
-  updateUser,
-} from "../../services/ApiCalls";
+import { getClientProfile, updatePassword, updateUser} from "../../services/ApiCalls";
 import { userData } from "../userSlice";
 import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
@@ -16,48 +12,44 @@ import { validatePasswordData, validateUpdateData } from "../../validations";
 export const Profile = () => {
   const navigate = useNavigate();
   const userRdxData = useSelector(userData);
-  const dispatch = useDispatch();
 
   const token = userRdxData.credentials?.token;
   const id = userRdxData.credentials.userData?.userId;
-  const decoded = userRdxData.credentials?.userData;
 
   const [profileData, setProfileData] = useState({});
   const [updateUserData, setUpdateUserData] = useState({});
   const [updatePasswordData, setUpdatePasswordData] = useState({});
+
   const [profileEditable, setProfileEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
-  //REFACTORIZAR USESTATES DE ERRORES PARA TENER UN UNICO CON DIFERENTES CLAVES CON LOS DIFERENTES ERRORES. TAMBIEN EL NAMING DE LOS ERRORES.
+  
   const [error, setError] = useState(null);
-  const [errorShow, setErrorShow] = useState(false);
-  const [error2Show, setError2Show] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
    // REFACTORIZAR LA PAGINACIÓN PARA GUARDAR LOS DATOS DE LA PAGINACION EN UN MISMO USESTATE
-  const [carPage, setCarPage] = useState(1);
-  const [carLimit, setCarLimit] = useState(1);
-  const [carCount, setCarCount] = useState();
-
-  const [inscPage, setInscPage] = useState(1);
-  const [inscLimit, setInscLimit] = useState(1);
-  const [inscCount, setInscCount] = useState();
+  const [paginationData, setPaginationData] = useState({
+    carPage: "1",
+    carlimit: "1",
+    carCount: "",
+    inscPage: "1",
+    inscLimit: "1",
+    inscCount: "",
+  });
+  
 
   useEffect(() => {
     if (!token) {
       navigate("/");
     } else {
-      getClientProfile(token, id, carPage, carLimit, inscPage, inscLimit).then(
-        (res) => {
-          console.log(res);
+      getClientProfile(token, id, paginationData).then((res) => {
           setProfileData(res);
-          setCarCount(res.userCarsCount);
-          setInscCount(res.userInscsCount);
+          setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
         }
       );
     }
   }, []);
 
   const editHandlerUser = () => {
-    setErrorShow(false);
+    setError(null);
     setUpdateShow(false);
     setProfileEditable(!profileEditable);
     setPasswordEditable(false);
@@ -65,13 +57,11 @@ export const Profile = () => {
   };
 
   const editHandlerPassword = () => {
-    setErrorShow(false);
-    setError2Show(false);
+    setError(null)
     setUpdateShow(false);
     setProfileEditable(false);
     setPasswordEditable(true);
     setUpdatePasswordData({});
-  
   };
 
   const inputHandlerUser = (event) => {
@@ -108,43 +98,25 @@ export const Profile = () => {
         };
         updateUser(token, id, updateData)
           .then(() => {
-            getClientProfile(
-              token,
-              id,
-              carPage,
-              carLimit,
-              inscPage,
-              inscLimit
-            ).then((res) => {
+            getClientProfile(token, id, paginationData).then((res) => {
               setProfileData(res);
-              setCarCount(res.userCarsCount);
-              setInscCount(res.userInscsCount);
+              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
               setProfileEditable(false);
               setUpdateShow(true);
             });
-          })
-          .catch(() => {
+          }).catch(() => {
             setError("Ups! You should try other username or email!");
           });
       } else {
         updateUser(token, id, updateUserData)
           .then(() => {
-            getClientProfile(
-              token,
-              id,
-              carPage,
-              carLimit,
-              inscPage,
-              inscLimit
-            ).then(() => {
+            getClientProfile(token, id, paginationData).then(() => {
               setProfileData(res);
-              setCarCount(res.userCarsCount);
-              setInscCount(res.userInscsCount);
+              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
               setProfileEditable(false);
               setUpdateShow(true);
             });
-          })
-          .catch(() => {
+          }).catch(() => {
             setError("Ups! You should try other username or email!");
           });
       }
@@ -169,11 +141,12 @@ export const Profile = () => {
   };
 
   useEffect(() => {
-    console.log(updatePasswordData);
-  }, [updatePasswordData]);
+    console.log(profileData);
+  }, [profileData]);
   useEffect(() => {
-    console.log(profileEditable);
-  }, [profileEditable]);
+    console.log(paginationData);
+  }, [paginationData]);
+
 
   return (
     <div className="profileData">

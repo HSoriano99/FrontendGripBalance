@@ -14,12 +14,13 @@ export const userLogin = async (credentials) => {
     return res.data;
 };
 
-export const getClientProfile = async (token, id, carPage, carLimit, inscPage, inscLimit) => {
+export const getClientProfile = async (token, id, paginationData) => {
     const config = {
         headers: {
             Authorization: 'Bearer ' + token
         }
-    }
+    };
+    const {carPage, carLimit, inscPage, inscLimit} = paginationData;
     const res = await axios.get(`${API_URL}/api/users/get-complete-user/${id}?carPage=${carPage}&carLimit=${carLimit}&inscPage=${inscPage}&inscLimit=${inscLimit}`, config);
    
     return res.data;
@@ -44,6 +45,6 @@ export const updatePassword = async (token, id, data) => {
         }
     }
     const res = await axios.patch(`${API_URL}/api/users/update-password/${id}`, data, config);
-    console.log(res);
+    
     return res;
 }
