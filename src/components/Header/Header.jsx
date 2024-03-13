@@ -84,7 +84,7 @@ export const Header = () => {
             
             //guardamos al igual que en el login nuestros datos de usuario logeado 
             dispatch(login({ credentials: data }));
-            // navigate("/profile");
+            navigate("/profile");
             setSmShow(false);
 
         }).catch((err) => setErrorShow(true));
@@ -111,7 +111,7 @@ export const Header = () => {
           userData: decodedToken,
         };
         dispatch(login({ credentials: data }));
-        // navigate("/profile");
+        navigate("/profile");
         setSmShow(false);
       }).catch((err) => setErrorShow(true));
   };

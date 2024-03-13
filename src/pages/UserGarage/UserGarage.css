@@ -1,0 +1,92 @@
+.profileData {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 2em;
+    align-items: center;
+    gap: 2em;
+  }
+  
+  .profileCard {
+    width: 600px; /* Tamaño fijo para pantallas grandes */
+    gap: 0.5em;
+  }
+
+  .garageEdit {
+    width: 600px; /* Tamaño fijo para pantallas grandes */
+    gap: 0.5em;
+    margin-bottom: 2em;
+  }
+
+  .profileCardUsername{
+    text-align: center;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+  }
+  
+  .profileImage {
+    width: 250px; /* Tamaño de la imagen */
+    height: 250px; /* Tamaño de la imagen */
+    object-fit: cover; /* Ajusta la imagen */
+    border-radius: 10px; /* Hace la imagen redonda */
+  }
+
+  .profileButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+  }
+
+  .garageButton {
+    border-radius: 10px;
+    width: 6em;
+   
+  }
+  
+  /* Estilos para pantallas medianas */
+  @media (max-width: 768px) {
+    .profileCard {
+      width: 100%; /* Utiliza todo el ancho disponible */
+      margin: 0 10px; /* Añade un margen a los lados */
+    }
+    .profileImage {
+        width: 200px; 
+        height: 200px;
+    }
+    .garageEdit {
+        width: 400px; /* Tamaño fijo para pantallas grandes */
+    }
+  }
+  
+  /* Estilos para pantallas pequeñas */
+  @media (max-width: 576px) {
+    .profileCard {
+      width: 100%; /* Utiliza todo el ancho disponible */
+      margin: 0 5px; /* Añade un margen a los lados */
+    }
+    .profileImage {
+        width: 150px; 
+        height: 150px;
+    }
+    .garageEdit {
+        width: 300px; /* Tamaño fijo para pantallas grandes */
+    }
+  }
+
+  .error{
+    color: rgba(255, 0, 0, 0.711);
+    text-align: center;
+}
+
+.update{
+    color: rgba(5, 151, 64, 0.934);
+   
+    text-align: center;
+}
+  

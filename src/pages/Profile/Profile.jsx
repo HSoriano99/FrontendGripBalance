@@ -12,7 +12,6 @@ import { validatePasswordData, validateUpdateData } from "../../validations";
 export const Profile = () => {
   const navigate = useNavigate();
   const userRdxData = useSelector(userData);
-
   const token = userRdxData.credentials?.token;
   const id = userRdxData.credentials.userData?.userId;
 
@@ -20,15 +19,15 @@ export const Profile = () => {
   const [updateUserData, setUpdateUserData] = useState({});
   const [updatePasswordData, setUpdatePasswordData] = useState({});
 
-  const [profileEditable, setProfileEditable] = useState(false);
+  const [profileEditable, setProfileEditable] = useState(true);
   const [passwordEditable, setPasswordEditable] = useState(false);
   
   const [error, setError] = useState(null);
   const [updateShow, setUpdateShow] = useState(false);
-   // REFACTORIZAR LA PAGINACIÓN PARA GUARDAR LOS DATOS DE LA PAGINACION EN UN MISMO USESTATE
+  
   const [paginationData, setPaginationData] = useState({
     carPage: "1",
-    carlimit: "1",
+    carLimit: "1",
     carCount: "",
     inscPage: "1",
     inscLimit: "1",
@@ -40,13 +39,27 @@ export const Profile = () => {
     if (!token) {
       navigate("/");
     } else {
+      navigate("#profileEditForm");
+      // Obtengo el hash de la URL
+      const hash = window.location.hash;
+      // Si hay un hash y corresponde a un elemento en el DOM
+      if (hash) {
+        const targetElement = document.querySelector(hash);
+        // Si se encuentra el elemento, nos desplazamos hasta el elemento
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
       getClientProfile(token, id, paginationData).then((res) => {
+        console.log(res);
           setProfileData(res);
           setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
         }
       );
     }
   }, []);
+
 
   const editHandlerUser = () => {
     setError(null);
@@ -110,7 +123,7 @@ export const Profile = () => {
       } else {
         updateUser(token, id, updateUserData)
           .then(() => {
-            getClientProfile(token, id, paginationData).then(() => {
+            getClientProfile(token, id, paginationData).then((res) => {
               setProfileData(res);
               setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
               setProfileEditable(false);
@@ -140,14 +153,6 @@ export const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(profileData);
-  }, [profileData]);
-  useEffect(() => {
-    console.log(paginationData);
-  }, [paginationData]);
-
-
   return (
     <div className="profileData">
       <Card className="profileCard">
@@ -174,7 +179,7 @@ export const Profile = () => {
           </Card.Text>
         </Card.Body>
         <Card.Body className="profileButtons">
-          <Button className="garageButton" variant="dark">
+          <Button className="garageButton" variant="dark" href="/garage">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               gap="0.5"
@@ -227,7 +232,7 @@ export const Profile = () => {
       <div className="profileDetails">
         {profileEditable === true ? (
           <Card className="profileEditForm" id="profileEditForm">
-            <Button variant="primary" onClick={() => editHandlerPassword()}>
+            <Button variant="primary" href = "#profileEditForm" onClick={() => editHandlerPassword()}>
               Change your password here!
             </Button>
             <CustomInput
@@ -261,9 +266,9 @@ export const Profile = () => {
               handler={inputHandlerUser}
             ></CustomInput>
             {error ? (<p className="error">{error}</p>) : null}
-            <Button variant="success" onClick={() => buttonHandlerSave()}>
-              Save
-            </Button>
+            {JSON.stringify(updateUserData) !== '{}' ? (
+              <Button variant="success" onClick={() => buttonHandlerSave()}>Save</Button>
+            ):null}
           </Card>
         ) : null}
         {passwordEditable === true ? (
@@ -287,12 +292,7 @@ export const Profile = () => {
               handler={inputHandlerPassword}
             ></CustomInput>
             {error ? (<p className="error">{error}</p>) : null}
-            <Button
-              variant="success"
-              onClick={() => buttonHandlerSavePassword()}
-            >
-              Save new password
-            </Button>
+            <Button variant="success" onClick={() => buttonHandlerSavePassword()}>Save new password</Button>
           </Card>
         ) : null}
       </div>
