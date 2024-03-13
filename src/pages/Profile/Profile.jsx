@@ -11,7 +11,7 @@ import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import "./Profile.css";
 import { Button } from "react-bootstrap";
-import { validatePasswordData } from "../../validations";
+import { validatePasswordData, validateUpdateData } from "../../validations";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -89,29 +89,16 @@ export const Profile = () => {
   };
 
   const buttonHandlerSave = () => {
-    try {
-      setErrorShow(false);
-      setUpdateShow(false);
-      //UTILIZAR MI ARCHIVO DE VALIDACIONES PARA REALIZARLAS DENTRO DE UNA FUNCIÓN EN VEZ DE AQUI
-      if (JSON.stringify(updateUserData) === "{}") {
-        setErrorShow(true);
+      setError(null);
+      
+      if (validateUpdateData(updateUserData) === "empty object") {
+        setError("Ups! You didn't update anything!");
         return;
-      } else if (
-        updateUserData.username === "" &&
-        updateUserData.email === "" &&
-        updateUserData.first_name === "" &&
-        updateUserData.last_name === "" &&
-        updateUserData.phone_number === ""
-      ) {
-        setErrorShow(true);
+      } else if (validateUpdateData(updateUserData) === "only empty strings") {
+        setError("Ups! You didn't update anything!");
         return;
-      } else if (
-        updateUserData.username === "" ||
-        updateUserData.email === "" ||
-        updateUserData.first_name === "" ||
-        updateUserData.last_name === "" ||
-        updateUserData.phone_number === ""
-      ) {
+      } else if (validateUpdateData(updateUserData) === "some empty strings") {
+        //esta validación puede contemplar la posibilidad de escribir en los inputs y acabar borrando lo escrito de todos ellos, realmente, actulizaremos con los datos que ya teniamos seteados en profileData
         const updateData = {
           username: updateUserData.username || profileData.user.username,
           email: updateUserData.email || profileData.user.email,
@@ -119,11 +106,8 @@ export const Profile = () => {
           last_name:updateUserData.last_name || profileData.user.last_name,
           phone_number: updateUserData.phone_number || profileData.user.phone_number,
         };
-
         updateUser(token, id, updateData)
-          .then((res) => {
-            console.log(res);
-
+          .then(() => {
             getClientProfile(
               token,
               id,
@@ -132,7 +116,6 @@ export const Profile = () => {
               inscPage,
               inscLimit
             ).then((res) => {
-              console.log(res);
               setProfileData(res);
               setCarCount(res.userCarsCount);
               setInscCount(res.userInscsCount);
@@ -140,14 +123,12 @@ export const Profile = () => {
               setUpdateShow(true);
             });
           })
-          .catch((err) => {
-            setErrorShow(true);
+          .catch(() => {
+            setError("Ups! You should try other username or email!");
           });
       } else {
         updateUser(token, id, updateUserData)
-          .then((res) => {
-            console.log(res);
-
+          .then(() => {
             getClientProfile(
               token,
               id,
@@ -155,8 +136,7 @@ export const Profile = () => {
               carLimit,
               inscPage,
               inscLimit
-            ).then((res) => {
-              console.log(res);
+            ).then(() => {
               setProfileData(res);
               setCarCount(res.userCarsCount);
               setInscCount(res.userInscsCount);
@@ -164,13 +144,10 @@ export const Profile = () => {
               setUpdateShow(true);
             });
           })
-          .catch((err) => {
-            setErrorShow(true);
+          .catch(() => {
+            setError("Ups! You should try other username or email!");
           });
       }
-    } catch (error) {
-      setErrorShow(true);
-    }
   };
 
   const buttonHandlerSavePassword = () => {
@@ -178,9 +155,11 @@ export const Profile = () => {
 
     if (validatePasswordData(updatePasswordData)==="empty fields") {
       setError("Nope! Please, complete all fields!")
+      return;
     } else if (validatePasswordData(updatePasswordData)=== "confirmed incorrectly") {
       setError("Nope! New password is not confirmed correctly!")
-    } else if (validatePasswordData(updatePasswordData)=== "confirmed new password") {
+      return;
+    } else if (validatePasswordData(updatePasswordData)=== "new password confirmed") {
        updatePassword(token, id, updatePasswordData).then(() => {
         setProfileEditable(false);
         setPasswordEditable(false);
@@ -308,9 +287,7 @@ export const Profile = () => {
               name={"phone_number"}
               handler={inputHandlerUser}
             ></CustomInput>
-            {errorShow ? (
-              <p className="error">Nope! Nothing to update.</p>
-            ) : null}
+            {error ? (<p className="error">{error}</p>) : null}
             <Button variant="success" onClick={() => buttonHandlerSave()}>
               Save
             </Button>
@@ -336,8 +313,6 @@ export const Profile = () => {
               name={"confirm_new_password"}
               handler={inputHandlerPassword}
             ></CustomInput>
-            {/* {error2Show ? <p className="error">Nope! Please, complete all fields!</p> : null}
-            {errorShow ? <p className="error">Nope! Try again!</p> : null} */}
             {error ? (<p className="error">{error}</p>) : null}
             <Button
               variant="success"

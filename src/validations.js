@@ -25,7 +25,31 @@ export const validatePasswordData = (data) => {
         return "confirmed incorrectly"
     } else {
         console.log("5");
-        return "confirmed new password"
+        return "new password confirmed"
     }
+    
+}
+
+export const validateUpdateData = (data) => {
+
+    console.log(data);
+
+    if ((JSON.stringify(data) === "{}")) {
+        console.log("1");
+        return "empty object";
+    }
+    const {username, email , first_name, last_name, phone_number} = data;
+
+    if (username === "" && email === "" && first_name === "" && last_name === "" && phone_number === "" ) {
+        console.log("2");
+        return "only empty strings";
+    }
+
+    if (username === "" || email === "" || first_name === "" || last_name === "" || phone_number === "" ) {
+        console.log("3");
+        return "some empty strings";
+    }
+    
+    return "updateData validated"
     
 }
