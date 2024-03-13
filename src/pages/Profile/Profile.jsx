@@ -11,6 +11,7 @@ import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import "./Profile.css";
 import { Button } from "react-bootstrap";
+import { validatePasswordData } from "../../validations";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -26,10 +27,12 @@ export const Profile = () => {
   const [updatePasswordData, setUpdatePasswordData] = useState({});
   const [profileEditable, setProfileEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
+  //REFACTORIZAR USESTATES DE ERRORES PARA TENER UN UNICO CON DIFERENTES CLAVES CON LOS DIFERENTES ERRORES. TAMBIEN EL NAMING DE LOS ERRORES.
+  const [error, setError] = useState(null);
   const [errorShow, setErrorShow] = useState(false);
   const [error2Show, setError2Show] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
-
+   // REFACTORIZAR LA PAGINACIÓN PARA GUARDAR LOS DATOS DE LA PAGINACION EN UN MISMO USESTATE
   const [carPage, setCarPage] = useState(1);
   const [carLimit, setCarLimit] = useState(1);
   const [carCount, setCarCount] = useState();
@@ -53,7 +56,7 @@ export const Profile = () => {
     }
   }, []);
 
-  const editHandlerUser = (event) => {
+  const editHandlerUser = () => {
     setErrorShow(false);
     setUpdateShow(false);
     setProfileEditable(!profileEditable);
@@ -61,7 +64,7 @@ export const Profile = () => {
     setUpdateUserData({})
   };
 
-  const editHandlerPassword = (event) => {
+  const editHandlerPassword = () => {
     setErrorShow(false);
     setError2Show(false);
     setUpdateShow(false);
@@ -89,8 +92,11 @@ export const Profile = () => {
     try {
       setErrorShow(false);
       setUpdateShow(false);
-
-      if (
+      //UTILIZAR MI ARCHIVO DE VALIDACIONES PARA REALIZARLAS DENTRO DE UNA FUNCIÓN EN VEZ DE AQUI
+      if (JSON.stringify(updateUserData) === "{}") {
+        setErrorShow(true);
+        return;
+      } else if (
         updateUserData.username === "" &&
         updateUserData.email === "" &&
         updateUserData.first_name === "" &&
@@ -98,6 +104,7 @@ export const Profile = () => {
         updateUserData.phone_number === ""
       ) {
         setErrorShow(true);
+        return;
       } else if (
         updateUserData.username === "" ||
         updateUserData.email === "" ||
@@ -166,27 +173,25 @@ export const Profile = () => {
     }
   };
 
-  const buttonHandlerSavePassword = (event) => {
+  const buttonHandlerSavePassword = () => {
+    setError(null);
 
-    setErrorShow(false);
-    setError2Show(false);
-    setUpdateShow(false);
-
-    if (!updatePasswordData.current_password  || updatePasswordData.current_password === "" || !updatePasswordData.new_password || updatePasswordData.new_password === "") {
-      setError2Show(true)
-    } else {
+    if (validatePasswordData(updatePasswordData)==="empty fields") {
+      setError("Nope! Please, complete all fields!")
+    } else if (validatePasswordData(updatePasswordData)=== "confirmed incorrectly") {
+      setError("Nope! New password is not confirmed correctly!")
+    } else if (validatePasswordData(updatePasswordData)=== "confirmed new password") {
        updatePassword(token, id, updatePasswordData).then(() => {
         setProfileEditable(false);
         setPasswordEditable(false);
         setUpdateShow(true);
-      }).catch((err) => {setErrorShow(true)})
+      }).catch(() => {setError("Nope! Invalid current password!")})
     }
-     
   };
 
   useEffect(() => {
-    console.log(updateUserData);
-  }, [updateUserData]);
+    console.log(updatePasswordData);
+  }, [updatePasswordData]);
   useEffect(() => {
     console.log(profileEditable);
   }, [profileEditable]);
@@ -325,8 +330,15 @@ export const Profile = () => {
               name={"new_password"}
               handler={inputHandlerPassword}
             ></CustomInput>
-            {error2Show ? <p className="error">Nope! Please, complete all fields!</p> : null}
-            {errorShow ? <p className="error">Nope! Try again!</p> : null}
+            <CustomInput
+              placeholder={"Confirm New Password"}
+              type={"password"}
+              name={"confirm_new_password"}
+              handler={inputHandlerPassword}
+            ></CustomInput>
+            {/* {error2Show ? <p className="error">Nope! Please, complete all fields!</p> : null}
+            {errorShow ? <p className="error">Nope! Try again!</p> : null} */}
+            {error ? (<p className="error">{error}</p>) : null}
             <Button
               variant="success"
               onClick={() => buttonHandlerSavePassword()}
