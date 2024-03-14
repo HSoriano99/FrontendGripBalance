@@ -53,3 +53,29 @@ export const validateUpdateData = (data) => {
     return "updateData validated"
     
 }
+
+export const validateCarSpecData = (data) => {
+    console.log(data);
+
+    if ((JSON.stringify(data) === "{}")) {
+        console.log("1");
+        return "empty object";
+    }
+
+    const {car_aero, car_engine, car_suspension, car_tires, car_differential} = data;
+
+    if (car_aero === "" && car_engine === "" && car_suspension === "" && car_tires === "" && car_differential === "") {
+        console.log("2");
+        return "only empty strings";
+    }
+
+    if (car_aero === "" || car_engine === "" || car_suspension === "" || car_tires === "" || car_differential === "") {
+        console.log("3");
+        return "some empty strings";
+    }
+
+    return "carSpecData validated"
+
+
+
+}

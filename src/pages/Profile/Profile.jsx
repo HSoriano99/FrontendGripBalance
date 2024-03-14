@@ -101,7 +101,7 @@ export const Profile = () => {
         setError("Ups! You didn't update anything!");
         return;
       } else if (validateUpdateData(updateUserData) === "some empty strings") {
-        //esta validación puede contemplar la posibilidad de escribir en los inputs y acabar borrando lo escrito de todos ellos, realmente, actulizaremos con los datos que ya teniamos seteados en profileData
+        //esta validación puede contemplar la posibilidad de escribir en algunos de los inputs y acabar borrando lo escrito de ellos, realmente, actualizaremos con los datos que ya teniamos seteados en profileData y no con inputs vacíos. Si ocurre en todos los inputs si salta un error gestionado.
         const updateData = {
           username: updateUserData.username || profileData.user.username,
           email: updateUserData.email || profileData.user.email,

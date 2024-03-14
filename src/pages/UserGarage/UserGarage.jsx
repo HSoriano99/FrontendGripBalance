@@ -7,7 +7,7 @@ import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import "./UserGarage.css";
 import { Button, CardBody } from "react-bootstrap";
-import { validatePasswordData, validateUpdateData } from "../../validations";
+import { validateCarSpecData, validatePasswordData, validateUpdateData } from "../../validations";
 
 export const UserGarage = () => {
   const navigate = useNavigate();
@@ -16,8 +16,10 @@ export const UserGarage = () => {
   const id = userRdxData.credentials.userData?.userId;
 
   const [profileData, setProfileData] = useState({});
+  const [error, setError] = useState(null);
+  const [updateShow, setUpdateShow] = useState(false);
   const [garageEditable, setGarageEditable] = useState(true);
-  const [carSpecEditable, setCarSpecEditable] = useState(null);
+  const [carSpecEditable, setCarSpecEditable] = useState(false);
   const [updateCarSpecData, setUpdateCarSpecData] = useState({});
   const [paginationData, setPaginationData] = useState({
     carPage: 1,
@@ -68,8 +70,7 @@ export const UserGarage = () => {
   };
 
   const carSpecHandler = (carId) => {
-    console.log(carId);
-    setCarSpecEditable(carId);
+    setCarSpecEditable(!carSpecEditable);
   };
 
   const inputHandlerCarSpec = (event) => {
@@ -130,6 +131,32 @@ export const UserGarage = () => {
         );
     };
   }
+
+  const buttonHandlerSave = () => {
+    setError(null);
+      
+      if (validateCarSpecData(updateCarSpecData) === "empty object") {
+        setError("Ups! You didn't update anything!");
+        return;
+      } else if (validateCarSpecData(updateCarSpecData) === "only empty strings") {
+        setError("Ups! You didn't update anything!");
+        return;
+      } else if (validateCarSpecData(updateCarSpecData) === "some empty strings") {
+        //esta validación puede contemplar la posibilidad de escribir en algunos de los inputs y acabar borrando lo escrito de ellos, realmente, actualizaremos con los datos que ya teniamos seteados en profileData y no con inpus vacios. Si ocurre en todos los inputs si salta un error gestionado.
+        const updateData = {
+            car_aero: updateCarSpecData.car_aero || profileData.user?.car[0]?.carSpec?.car_aero,
+            car_engine: updateCarSpecData.car_engine || profileData.user?.car[0]?.carSpec?.car_engine,
+            car_suspension: updateCarSpecData.car_suspension || profileData.user?.car[0]?.carSpec?.car_suspension,
+            car_tires: updateCarSpecData.car_tires || profileData.user?.car[0]?.carSpec?.car_tires,
+            car_differential: updateCarSpecData.car_differential || profileData.user?.car[0]?.carSpec?.car_differential,
+        }
+        updateCarSpec(token, id, updateData)
+        //FALTA INPLEMENTAR LLAMADA EN APICALLS Y AQUI, YA ESTA COMITEADA EN EL BACK Y TESTEADA
+
+      }
+
+
+  };
 
   useEffect(() => {console.log(profileData)},[profileData]);
   useEffect(() => {console.log(updateCarSpecData)},[updateCarSpecData]);
@@ -263,11 +290,14 @@ export const UserGarage = () => {
             </svg>
             <p className="carSpecButtonTitle" >Car Specs</p>
             </Button>
+            {updateShow === true ? (
+            <p className="update">Yes! Updated successfully.</p>
+            ) : null}
             </CardBody>
             </div>
             </div>
             
-            {carSpecEditable !== null ? (
+            {carSpecEditable === true ? (
                 <Card className="garageEdit" id="carSpecEditForm">
                     <CustomInput 
                     placeholder={ profileData.user?.car[0]?.carSpec?.car_aero.toUpperCase() + " AERO" || "AERO"}
@@ -299,8 +329,10 @@ export const UserGarage = () => {
                     name={"car_differential"}
                     handler={inputHandlerCarSpec}
                     ></CustomInput>
-                    {/* {error ? (<p className="error">{error}</p>) : null} */}
-                    {/* <Button variant="success" onClick={() => buttonHandlerSaveCarSpecs()}>Save new specs</Button> */}
+                    {error ? (<p className="error">{error}</p>) : null}
+                    {JSON.stringify(updateCarSpecData) !== '{}' ? (
+                    <Button variant="success" onClick={() => buttonHandlerSave()}>Save New Specs</Button>
+                    ):null}
                 </Card>
             ) : null}
           </Card>
