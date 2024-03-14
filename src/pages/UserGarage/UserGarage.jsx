@@ -32,16 +32,15 @@ export const UserGarage = () => {
     if (!token) {
       navigate("/");
     } else {
-        
       getClientProfile(token, id, paginationData).then((res) => {
-          console.log(res);
           setProfileData(res);
+          // Actualizar paginationData con los valores convertidos
           setPaginationData((prevState) => ({
             ...prevState,
-            carPage: res.carPage,
-            carLimit: res.carLimit,
-            inscPage: res.inscPage,
-            inscLimit: res.inscLimit
+            carPage: Number(res.carPage),
+            carLimit: Number(res.carLimit),
+            inscPage: Number(res.inscPage),
+            inscLimit: Number(res.inscLimit),
           }));
           setItemsCount((prevState) => ({
             ...prevState,
@@ -73,15 +72,15 @@ export const UserGarage = () => {
         const carPage = paginationData.carPage -1
         console.log(paginationData)
         getClientProfile(token, id, { ...paginationData, carPage: carPage }).then((res) => {
-            console.log(res);
             setProfileData(res);
+            // Actualizar paginationData con los valores convertidos
             setPaginationData((prevState) => ({
-                ...prevState,
-                carPage: res.carPage,
-                carLimit: res.carLimit,
-                inscPage: res.inscPage,
-                inscLimit: res.inscLimit
-              }));
+            ...prevState,
+                carPage: Number(res.carPage),
+                carLimit: Number(res.carLimit),
+                inscPage: Number(res.inscPage),
+                inscLimit: Number(res.inscLimit),
+             }));
             setItemsCount((prevState) => ({
                 ...prevState,
                 carCount: res.userCarsCount,
@@ -89,11 +88,36 @@ export const UserGarage = () => {
               }));
           }
         );
-
     };
   }
 
+  const nextPageHandler = () => {
+    if (paginationData.carLimit * paginationData.carPage >= itemsCount.carCount) {
+        null
+    } else {
+        const carPage = paginationData.carPage +1
+        console.log(paginationData)
+        getClientProfile(token, id, { ...paginationData, carPage: carPage }).then((res) => {
+            setProfileData(res);
+            // Actualizar paginationData con los valores convertidos
+            setPaginationData((prevState) => ({
+            ...prevState,
+                carPage: Number(res.carPage),
+                carLimit: Number(res.carLimit),
+                inscPage: Number(res.inscPage),
+                inscLimit: Number(res.inscLimit),
+             }));
+            setItemsCount((prevState) => ({
+                ...prevState,
+                carCount: res.userCarsCount,
+                inscCount: res.userInscsCount
+              }));
+          }
+        );
+    };
+  }
 
+  useEffect(() => {console.log(paginationData)},[paginationData]);
 
   return (
     <div className="profileData">
@@ -208,7 +232,7 @@ export const UserGarage = () => {
             </div>
             </div>
             <div className="pageDiv2">
-            <Button className="pageButton" variant="secondary">
+            <Button className="pageButton" variant="secondary" onClick={() => nextPageHandler()}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
             <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
             </svg>
