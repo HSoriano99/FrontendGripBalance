@@ -17,8 +17,10 @@ export const UserGarage = () => {
 
   const [profileData, setProfileData] = useState({});
   const [garageEditable, setGarageEditable] = useState(true);
+  const [carSpecEditable, setCarSpecEditable] = useState(null);
+  const [updateCarSpecData, setUpdateCarSpecData] = useState({});
   const [paginationData, setPaginationData] = useState({
-    carPage: 2,
+    carPage: 1,
     carLimit: 1,
     inscPage: 1,
     inscLimit: 1,
@@ -63,6 +65,18 @@ export const UserGarage = () => {
 
   const garageHandler = () => {
     setGarageEditable(!garageEditable);
+  };
+
+  const carSpecHandler = (carId) => {
+    console.log(carId);
+    setCarSpecEditable(carId);
+  };
+
+  const inputHandlerCarSpec = (event) => {
+    setUpdateCarSpecData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   const prevPageHandler = () => {
@@ -117,7 +131,8 @@ export const UserGarage = () => {
     };
   }
 
-  useEffect(() => {console.log(paginationData)},[paginationData]);
+  useEffect(() => {console.log(profileData)},[profileData]);
+  useEffect(() => {console.log(updateCarSpecData)},[updateCarSpecData]);
 
   return (
     <div className="profileData">
@@ -194,23 +209,35 @@ export const UserGarage = () => {
     <div className="profileDetails">
         {garageEditable === true ? (
           <Card className="garageEdit" id="garageEdit">
+            <div className="pageButtons">
             {paginationData.carPage > 1 ? (
-            <div className="pageDiv1">
-            <Button className="pageButton" variant="secondary" onClick={() => prevPageHandler()}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-left" viewBox="0 0 16 16">
-            <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
-            </svg>
-            </Button>
-            </div>
-            ):
-            <div className="pageDiv1">
-            <Button className="pageButtonHide" variant="secondary" onClick={() => prevPageHandler()}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-left" viewBox="0 0 16 16">
-            <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
-            </svg>
-            </Button>
-            </div>
+                <Button className="pageButton" variant="secondary" onClick={() => prevPageHandler()}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-left" viewBox="0 0 16 16">
+                <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
+                </svg>
+                </Button>
+                ):
+                <Button className="pageButtonHide" variant="secondary" onClick={() => prevPageHandler()}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-left" viewBox="0 0 16 16">
+                <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
+                </svg>
+                </Button>
             }
+            {paginationData.carLimit * paginationData.carPage < itemsCount.carCount ? (
+                 <Button className="pageButton" variant="secondary" onClick={() => nextPageHandler()}>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
+                 <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+                 </svg>
+                 </Button>
+            ):
+                <Button className="pageButtonHide" variant="secondary" onClick={() => nextPageHandler()}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
+                <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+                </svg>
+                </Button>
+            }
+            </div>
+
             <div className="carCard">
             <div className="imageWrapper">
             {profileData.user?.car[0]?.car_image ? (
@@ -229,7 +256,7 @@ export const UserGarage = () => {
             {profileData.user?.car[0]?.car_spec?.toUpperCase()} {profileData.user?.car[0]?.car_category?.toUpperCase()}
             </Card.Text>
             <CardBody className="carSpec">
-            <Button className="carSpecButton" variant="dark">
+            <Button className="carSpecButton" variant="dark" onClick={() => carSpecHandler(profileData.user?.car[0]?.id)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-gear" viewBox="0 0 16 16">
             <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
             <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
@@ -239,23 +266,43 @@ export const UserGarage = () => {
             </CardBody>
             </div>
             </div>
-            {paginationData.carLimit * paginationData.carPage < itemsCount.carCount ? (
-                 <div className="pageDiv2">
-                 <Button className="pageButton" variant="secondary" onClick={() => nextPageHandler()}>
-                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
-                 <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
-                 </svg>
-                 </Button>
-                 </div>
-            ):
-                <div className="pageDiv2">
-                <Button className="pageButtonHide" variant="secondary" onClick={() => nextPageHandler()}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
-                <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
-                </svg>
-                </Button>
-                </div>
-            }
+            
+            {carSpecEditable !== null ? (
+                <Card className="garageEdit" id="carSpecEditForm">
+                    <CustomInput
+                    placeholder={profileData.user?.car[0]?.carSpec?.car_aero || "Aero"}
+                    type={"password"}
+                    name={"current_password"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={profileData.user?.car[0]?.carSpec?.car_engine || "Engine"}
+                    type={"password"}
+                    name={"new_password"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={profileData.user?.car[0]?.carSpec?.car_suspension || "Suspension"}
+                    type={"password"}
+                    name={"confirm_new_password"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={profileData.user?.car[0]?.carSpec?.car_tires || "Tires"}
+                    type={"password"}
+                    name={"confirm_new_password"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={profileData.user?.car[0]?.carSpec?.car_differential || "Differential"}
+                    type={"password"}
+                    name={"confirm_new_password"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    {/* {error ? (<p className="error">{error}</p>) : null} */}
+                    {/* <Button variant="success" onClick={() => buttonHandlerSaveCarSpecs()}>Save new specs</Button> */}
+                </Card>
+            ) : null}
           </Card>
         ):null}
     </div>
