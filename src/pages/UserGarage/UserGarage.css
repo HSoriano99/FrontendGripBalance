@@ -180,3 +180,7 @@
    
     text-align: center;
 }
+
+.customInput::placeholder{
+    text-align: center;
+}
