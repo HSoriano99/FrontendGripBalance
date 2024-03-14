@@ -57,6 +57,30 @@
     border-radius: 50%;
   }
 
+  .pageButtonHide.btn.btn-secondary {
+    display: flex;
+    height: 2em;
+    width: 2em;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.115);
+    color: rgba(0, 0, 0, 0.337);
+  }
+
+  .pageButtonHide.btn.btn-secondary:active {
+    display: flex;
+    height: 2em;
+    width: 2em;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.415);
+    color: rgba(0, 0, 0, 0.337);
+  }
+
   .garageCardTitle{
     text-align: center;
     margin-top: 0.5em;
