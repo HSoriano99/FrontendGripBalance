@@ -18,12 +18,14 @@ export const UserGarage = () => {
   const [profileData, setProfileData] = useState({});
   const [garageEditable, setGarageEditable] = useState(true);
   const [paginationData, setPaginationData] = useState({
-    carPage: "1",
-    carLimit: "1",
-    carCount: "",
-    inscPage: "1",
-    inscLimit: "1",
-    inscCount: "",
+    carPage: 2,
+    carLimit: 1,
+    inscPage: 1,
+    inscLimit: 1,
+  });
+  const [itemsCount, setItemsCount] = useState({
+    carCount: null,
+    inscCount: null,
   });
 
   useEffect(() => {
@@ -34,7 +36,19 @@ export const UserGarage = () => {
       getClientProfile(token, id, paginationData).then((res) => {
           console.log(res);
           setProfileData(res);
-          setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
+          setPaginationData((prevState) => ({
+            ...prevState,
+            carPage: res.carPage,
+            carLimit: res.carLimit,
+            inscPage: res.inscPage,
+            inscLimit: res.inscLimit
+          }));
+          setItemsCount((prevState) => ({
+            ...prevState,
+            carCount: res.userCarsCount,
+            inscCount: res.userInscsCount
+          }));
+
           navigate("#garageEdit");
           const hash = window.location.hash;
           if (hash) {
@@ -51,6 +65,34 @@ export const UserGarage = () => {
   const garageHandler = () => {
     setGarageEditable(!garageEditable);
   };
+
+  const prevPageHandler = () => {
+    if (paginationData.carPage <= 1) {
+        null
+    } else {
+        const carPage = paginationData.carPage -1
+        console.log(paginationData)
+        getClientProfile(token, id, { ...paginationData, carPage: carPage }).then((res) => {
+            console.log(res);
+            setProfileData(res);
+            setPaginationData((prevState) => ({
+                ...prevState,
+                carPage: res.carPage,
+                carLimit: res.carLimit,
+                inscPage: res.inscPage,
+                inscLimit: res.inscLimit
+              }));
+            setItemsCount((prevState) => ({
+                ...prevState,
+                carCount: res.userCarsCount,
+                inscCount: res.userInscsCount
+              }));
+          }
+        );
+
+    };
+  }
+
 
 
   return (
@@ -128,13 +170,15 @@ export const UserGarage = () => {
     <div className="profileDetails">
         {garageEditable === true ? (
           <Card className="garageEdit" id="garageEdit">
-            <div className="pageDiv">
-            <Button className="pageButton" variant="secondary">
+            {paginationData.carPage > 1 ? (
+            <div className="pageDiv1">
+            <Button className="pageButton" variant="secondary" onClick={() => prevPageHandler()}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-left" viewBox="0 0 16 16">
             <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
             </svg>
             </Button>
             </div>
+            ): null}
             <div className="carCard">
             <div className="imageWrapper">
             {profileData.user?.car[0]?.car_image ? (
@@ -163,7 +207,7 @@ export const UserGarage = () => {
             </CardBody>
             </div>
             </div>
-            <div className="pageDiv">
+            <div className="pageDiv2">
             <Button className="pageButton" variant="secondary">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-right" viewBox="0 0 16 16">
             <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>

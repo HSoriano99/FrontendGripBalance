@@ -15,6 +15,7 @@ export const userLogin = async (credentials) => {
 };
 
 export const getClientProfile = async (token, id, paginationData) => {
+    console.log(paginationData)
     const config = {
         headers: {
             Authorization: 'Bearer ' + token

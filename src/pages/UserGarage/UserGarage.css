@@ -10,6 +10,8 @@
   .carCard {
     display: flex;
     flex-direction: column;
+    position: relative;
+    margin-top: 2em;
   }
   
   .profileCard {
@@ -19,17 +21,30 @@
 
   .garageEdit {
     width: 600px; /* Tamaño fijo para pantallas grandes */
-    gap: 0.5em;
+    gap: 2em;
     margin-bottom: 2em;
     display: flex;
     flex-direction: row;
     justify-content: center;
   }
 
-  .pageDiv {
+  .pageDiv1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    margin-left: -3em;
+    margin-top: 0.5em;
+    z-index: 1;
+  }
+  .pageDiv2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    margin-left: 3em;
+    margin-top: 0.5em;
+    z-index: 1;
   }
 
   .pageButton {
@@ -107,30 +122,32 @@
   /* Estilos para pantallas medianas */
   @media (max-width: 768px) {
     .profileCard {
-      width: 100%; /* Utiliza todo el ancho disponible */
-      margin: 0 10px; /* Añade un margen a los lados */
+      width: 100%; 
+      margin: 0 10px; 
     }
     .profileImage {
         width: 200px; 
         height: 200px;
     }
     .garageEdit {
-        width: 400px; /* Tamaño fijo para pantallas grandes */
+        width: 400px; 
+        gap: 1em;
     }
   }
   
   /* Estilos para pantallas pequeñas */
   @media (max-width: 576px) {
     .profileCard {
-      width: 100%; /* Utiliza todo el ancho disponible */
-      margin: 0 5px; /* Añade un margen a los lados */
+      width: 100%; 
+      margin: 0 5px; 
     }
     .profileImage {
         width: 150px; 
         height: 150px;
     }
     .garageEdit {
-        width: 300px; /* Tamaño fijo para pantallas grandes */
+        width: 300px; 
+        gap: 0.5em;
     }
   }
 
