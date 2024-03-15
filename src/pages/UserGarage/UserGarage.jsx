@@ -20,7 +20,9 @@ export const UserGarage = () => {
   const [updateShow, setUpdateShow] = useState(false);
   const [garageEditable, setGarageEditable] = useState(true);
   const [carSpecEditable, setCarSpecEditable] = useState(false);
+  const [newCarEditable, setNewCarEditable] = useState(false);
   const [updateCarSpecData, setUpdateCarSpecData] = useState({});
+  const [registerNewCarData, setRegisterNewCarData] = useState({});
   const [paginationData, setPaginationData] = useState({
     carPage: 1,
     carLimit: 1,
@@ -67,10 +69,20 @@ export const UserGarage = () => {
 
   const garageHandler = () => {
     setGarageEditable(!garageEditable);
+    setCarSpecEditable(false);
+    setNewCarEditable(false);
+    setUpdateShow(false);
   };
 
   const carSpecHandler = () => {
     setCarSpecEditable(!carSpecEditable);
+    setUpdateShow(false);
+  };
+
+  const newCarHandler = () => {
+    setNewCarEditable(!newCarEditable);
+    setGarageEditable(false);
+    setCarSpecEditable(false);
     setUpdateShow(false);
   };
 
@@ -79,6 +91,14 @@ export const UserGarage = () => {
     setUpdateCarSpecData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
+    }));
+  };
+
+  const inputHandlerNewCar = (event) => {
+    setError(null)
+    setRegisterNewCarData((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value.toLowerCase(),
     }));
   };
 
@@ -134,7 +154,7 @@ export const UserGarage = () => {
     };
   }
 
-  const buttonHandlerSave = () => {
+  const buttonHandlerSaveCarSpecs = () => {
     setError(null);
 
     const carId =  profileData.user?.car[0]?.id
@@ -201,8 +221,33 @@ export const UserGarage = () => {
       }
   };
 
+  const buttonHandlerSaveNewcar = () => {
+    setError(null);
+    registerNewCarData(token, id, registerNewCarData).then(() => {
+      getClientProfile(token, id, paginationData).then((res) => {
+        setProfileData(res);
+        setPaginationData((prevState) => ({
+          ...prevState,
+              carPage: Number(res.carPage),
+              carLimit: Number(res.carLimit),
+              inscPage: Number(res.inscPage),
+              inscLimit: Number(res.inscLimit),
+           }));
+        setItemsCount((prevState) => ({
+              ...prevState,
+              carCount: res.userCarsCount,
+              inscCount: res.userInscsCount
+          }));
+        setCarSpecEditable(false);
+        setUpdateShow(true);
+      });
+    }).catch(() => {
+      setError("Ups! Try again!");
+    });
+  }
+
   useEffect(() => {console.log(profileData)},[profileData]);
-  useEffect(() => {console.log(updateCarSpecData)},[updateCarSpecData]);
+  useEffect(() => {console.log(registerNewCarData)},[registerNewCarData]);
 
   return (
     <div className="profileData">
@@ -277,7 +322,56 @@ export const UserGarage = () => {
       </Card.Body>
     </Card>
     <div className="profileDetails">
-
+        {newCarEditable === true ? (
+           <Button className="newCarButton" variant="danger" href="#newCarForm" onClick={() => newCarHandler()}>Maybe Next Season</Button>
+        ): <Button className="newCarButton" variant="primary" href="#newCarForm" onClick={() => newCarHandler()}>Add New Car</Button>}
+        
+        {newCarEditable === true ? (
+                <Card className="carSpecEdit" id="newCarForm">
+                    <CustomInput 
+                    placeholder={"Brand: Toyota, Nissan, BMW,..."}
+                    type={"text"}
+                    name={"car_brand"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"Model: Chaser, PS13, E36 "}
+                    type={"text"}
+                    name={"car_model"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"Spec: Street, Tracktool, Racecar"}
+                    type={"text"}
+                    name={"car_spec"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"Category: Racing, Drifting, Timeattack"}
+                    type={"text"}
+                    name={"car_category"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"Link to you car image here..."}
+                    type={"text"}
+                    name={"car_image"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput>
+                    {/* FUNCIONALIDAD EN CURSO */}
+                    {/* <p style={{ margin: "0" }}>Drop your car image here:</p>
+                    <CustomInput
+                    type={"file"}
+                    name={"car_image"}
+                    value={"Drop your car image here"}
+                    handler={inputHandlerNewCar}
+                    ></CustomInput> */}
+                    {error ? (<p className="error">{error}</p>) : null}
+                    {JSON.stringify(registerNewCarData) !== '{}' ? (
+                    <Button variant="success" onClick={() => buttonHandlerSaveNewcar()}>Save New Car</Button>
+                    ):null}
+                </Card>
+            ) : null}
         {garageEditable === true ? (
           <Card className="garageEdit" id="garageEdit">
             <div className="pageButtons">
@@ -340,9 +434,8 @@ export const UserGarage = () => {
             </CardBody>
             </div>
             </div>
-            
             {carSpecEditable === true ? (
-                <Card className="garageEdit" id="carSpecEditForm">
+                <Card className="carSpecEdit" id="carSpecEditForm">
                     <CustomInput 
                     placeholder={ profileData.user?.car[0]?.carSpec?.car_aero.toUpperCase() + " AERO" || "AERO"}
                     type={"text"}
@@ -375,7 +468,7 @@ export const UserGarage = () => {
                     ></CustomInput>
                     {error ? (<p className="error">{error}</p>) : null}
                     {JSON.stringify(updateCarSpecData) !== '{}' ? (
-                    <Button variant="success" onClick={() => buttonHandlerSave()}>Save New Specs</Button>
+                    <Button variant="success" onClick={() => buttonHandlerSaveCarSpecs()}>Save New Specs</Button>
                     ):null}
                 </Card>
             ) : null}
