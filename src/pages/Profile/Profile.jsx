@@ -7,7 +7,7 @@ import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import "./Profile.css";
 import { Button } from "react-bootstrap";
-import { validatePasswordData, validateUpdateData } from "../../validations";
+import { keyValidator, validatePasswordData, validateUpdateData } from "../../validations";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -100,8 +100,9 @@ export const Profile = () => {
       } else if (validateUpdateData(updateUserData) === "only empty strings") {
         setError("Ups! You didn't update anything!");
         return;
+      }  else if (keyValidator(updateUserData, Object.keys(updateUserData)) === null) {
+        setError("Ups! You finally didn't update anything!");
       } else if (validateUpdateData(updateUserData) === "some empty strings") {
-        //esta validación puede contemplar la posibilidad de escribir en algunos de los inputs y acabar borrando lo escrito de ellos, realmente, actualizaremos con los datos que ya teniamos seteados en profileData y no con inputs vacíos. Si ocurre en todos los inputs si salta un error gestionado.
         const updateData = {
           username: updateUserData.username || profileData.user.username,
           email: updateUserData.email || profileData.user.email,

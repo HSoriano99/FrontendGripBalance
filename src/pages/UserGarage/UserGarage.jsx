@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getClientProfile, updatePassword, updateUser} from "../../services/ApiCalls";
+import { getClientProfile, updateCarSpec, updatePassword, updateUser} from "../../services/ApiCalls";
 import { userData } from "../userSlice";
 import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import "./UserGarage.css";
 import { Button, CardBody } from "react-bootstrap";
-import { validateCarSpecData, validatePasswordData, validateUpdateData } from "../../validations";
+import { keyValidator, validateCarSpecData, validatePasswordData, validateUpdateData } from "../../validations";
 
 export const UserGarage = () => {
   const navigate = useNavigate();
@@ -69,11 +69,13 @@ export const UserGarage = () => {
     setGarageEditable(!garageEditable);
   };
 
-  const carSpecHandler = (carId) => {
+  const carSpecHandler = () => {
     setCarSpecEditable(!carSpecEditable);
+    setUpdateShow(false);
   };
 
   const inputHandlerCarSpec = (event) => {
+    setError(null)
     setUpdateCarSpecData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
@@ -141,21 +143,38 @@ export const UserGarage = () => {
       } else if (validateCarSpecData(updateCarSpecData) === "only empty strings") {
         setError("Ups! You didn't update anything!");
         return;
+      } else if (keyValidator(updateCarSpecData, Object.keys(updateCarSpecData)) === null) {
+        setError("Ups! You finally didn't update anything!");
       } else if (validateCarSpecData(updateCarSpecData) === "some empty strings") {
-        //esta validación puede contemplar la posibilidad de escribir en algunos de los inputs y acabar borrando lo escrito de ellos, realmente, actualizaremos con los datos que ya teniamos seteados en profileData y no con inpus vacios. Si ocurre en todos los inputs si salta un error gestionado.
         const updateData = {
             car_aero: updateCarSpecData.car_aero || profileData.user?.car[0]?.carSpec?.car_aero,
             car_engine: updateCarSpecData.car_engine || profileData.user?.car[0]?.carSpec?.car_engine,
             car_suspension: updateCarSpecData.car_suspension || profileData.user?.car[0]?.carSpec?.car_suspension,
             car_tires: updateCarSpecData.car_tires || profileData.user?.car[0]?.carSpec?.car_tires,
             car_differential: updateCarSpecData.car_differential || profileData.user?.car[0]?.carSpec?.car_differential,
-        }
-        updateCarSpec(token, id, updateData)
-        //FALTA INPLEMENTAR LLAMADA EN APICALLS Y AQUI, YA ESTA COMITEADA EN EL BACK Y TESTEADA
-
+        };
+        updateCarSpec(token, id, updateData).then(() => {
+            getClientProfile(token, id, paginationData).then((res) => {
+              setProfileData(res);
+              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
+              setCarSpecEditable(false);
+              setUpdateShow(true);
+            });
+          }).catch(() => {
+            setError("Ups! Try again!");
+          });
+      } else {
+        updateCarSpec(token, id, updateCarSpecData).then(() => {
+            getClientProfile(token, id, paginationData).then((res) => {
+              setProfileData(res);
+              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
+              setCarSpecEditable(false);
+              setUpdateShow(true);
+            });
+          }).catch(() => {
+            setError("Ups! Try again!");
+          });
       }
-
-
   };
 
   useEffect(() => {console.log(profileData)},[profileData]);
