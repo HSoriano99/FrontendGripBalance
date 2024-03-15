@@ -128,7 +128,7 @@ export const UserGarage = () => {
                 ...prevState,
                 carCount: res.userCarsCount,
                 inscCount: res.userInscsCount
-              }));
+            }));
           }
         );
     };
@@ -136,6 +136,8 @@ export const UserGarage = () => {
 
   const buttonHandlerSave = () => {
     setError(null);
+
+    const carId =  profileData.user?.car[0]?.id
       
       if (validateCarSpecData(updateCarSpecData) === "empty object") {
         setError("Ups! You didn't update anything!");
@@ -153,10 +155,21 @@ export const UserGarage = () => {
             car_tires: updateCarSpecData.car_tires || profileData.user?.car[0]?.carSpec?.car_tires,
             car_differential: updateCarSpecData.car_differential || profileData.user?.car[0]?.carSpec?.car_differential,
         };
-        updateCarSpec(token, id, updateData).then(() => {
+        updateCarSpec(token, carId, updateData).then(() => {
             getClientProfile(token, id, paginationData).then((res) => {
               setProfileData(res);
-              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
+              setPaginationData((prevState) => ({
+                ...prevState,
+                    carPage: Number(res.carPage),
+                    carLimit: Number(res.carLimit),
+                    inscPage: Number(res.inscPage),
+                    inscLimit: Number(res.inscLimit),
+                 }));
+              setItemsCount((prevState) => ({
+                    ...prevState,
+                    carCount: res.userCarsCount,
+                    inscCount: res.userInscsCount
+                }));
               setCarSpecEditable(false);
               setUpdateShow(true);
             });
@@ -164,10 +177,21 @@ export const UserGarage = () => {
             setError("Ups! Try again!");
           });
       } else {
-        updateCarSpec(token, id, updateCarSpecData).then(() => {
+        updateCarSpec(token, carId, updateCarSpecData).then(() => {
             getClientProfile(token, id, paginationData).then((res) => {
               setProfileData(res);
-              setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
+              setPaginationData((prevState) => ({
+                ...prevState,
+                    carPage: Number(res.carPage),
+                    carLimit: Number(res.carLimit),
+                    inscPage: Number(res.inscPage),
+                    inscLimit: Number(res.inscLimit),
+                 }));
+              setItemsCount((prevState) => ({
+                    ...prevState,
+                    carCount: res.userCarsCount,
+                    inscCount: res.userInscsCount
+                }));
               setCarSpecEditable(false);
               setUpdateShow(true);
             });
@@ -253,6 +277,7 @@ export const UserGarage = () => {
       </Card.Body>
     </Card>
     <div className="profileDetails">
+
         {garageEditable === true ? (
           <Card className="garageEdit" id="garageEdit">
             <div className="pageButtons">
@@ -285,7 +310,7 @@ export const UserGarage = () => {
             </div>
 
             <div className="carCard">
-            <div className="imageWrapper">
+            <div className="imageWrapperCar">
             {profileData.user?.car[0]?.car_image ? (
             <Card.Img
                 className="profileImage"
