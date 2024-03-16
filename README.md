@@ -41,8 +41,7 @@ Link repositorio del backend: https://github.com/HSoriano99/BackendGripBalance
 
 ## Sobre el proyecto
 
-Consiste en una aplicación web para eventos de motorsport, que nos permitirá registrarnos, disponer de un perfil de usuario donde tenemos un garaje virtual donde añadimos nuestros coches, incluir caracteristicas tecnicas del vehiculo y editarlas para posteriormente inscribirse en diferentes eventos con nuestros coches en funcion de su compatibilidad con el evento. Como futuras funcionalidades podremos ver los inscritos en eventos pasados, ver sus coches y comparar sus caracteristicas.
-
+Consiste en una aplicación web para eventos de motorsport. Contiene diferentes vistas, como Home donde encontrarás un breve resumen de los servicios que se ofrecen. Formulario de registro y login/logout desde el header, asi como navegar a la vista de eventos donde podremos visualizarlos y tener opción de inscribirnos en el caso de estar logueados. Vista de perfil de usuario donde tenemos un garaje virtual donde añadimos nuestros coches, incluimos caracteristicas tecnicas del vehiculo y las editamos para posteriormente inscribirse en los eventos en funcion de la compatibilidad con el evento. Como futuras funcionalidades podremos ver los inscritos en eventos pasados, ver sus coches y comparar sus caracteristicas o una vista como administrador con permisos únicos sobre usuarios y eventos.
 ## Stack
 
 Tecnologías utilizadas:
