@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getClientProfile, registerNewCar, updateCarSpec, updatePassword, updateUser} from "../../services/ApiCalls";
+import { getClientProfile, registerCarSpec, registerNewCar, updateCarSpec, updatePassword, updateUser} from "../../services/ApiCalls";
 import { userData } from "../userSlice";
 import Card from "react-bootstrap/Card";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
@@ -22,6 +22,7 @@ export const UserGarage = () => {
   const [carSpecEditable, setCarSpecEditable] = useState(false);
   const [newCarEditable, setNewCarEditable] = useState(false);
   const [updateCarSpecData, setUpdateCarSpecData] = useState({});
+  const [registerCarSpecData, setRegisterCarSpecData] = useState({});
   const [registerNewCarData, setRegisterNewCarData] = useState({});
   const [paginationData, setPaginationData] = useState({
     carPage: 1,
@@ -79,6 +80,8 @@ export const UserGarage = () => {
     setCarSpecEditable(!carSpecEditable);
     setUpdateShow(false);
     setError(null)
+    setRegisterCarSpecData({}),
+    setUpdateCarSpecData({})
   };
 
   const newCarHandler = () => {
@@ -91,10 +94,17 @@ export const UserGarage = () => {
 
   const inputHandlerCarSpec = (event) => {
     setError(null)
-    setUpdateCarSpecData((prevState) => ({
+    if (profileData.user?.car[0]?.carSpec === null) {
+      setRegisterCarSpecData((prevState) => ({
+        ...prevState,
+        [event.target.name]: event.target.value,
+      }));
+    } else if (profileData.user?.car[0]?.carSpec !== null) {
+      setUpdateCarSpecData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
     }));
+    }
   };
 
   const inputHandlerNewCar = (event) => {
@@ -106,6 +116,8 @@ export const UserGarage = () => {
   };
 
   const prevPageHandler = () => {
+    setRegisterCarSpecData({}),
+    setUpdateCarSpecData({})
     if (paginationData.carPage <= 1) {
         null
     } else {
@@ -132,6 +144,8 @@ export const UserGarage = () => {
   }
 
   const nextPageHandler = () => {
+    setRegisterCarSpecData({}),
+    setUpdateCarSpecData({})
     if (paginationData.carLimit * paginationData.carPage >= itemsCount.carCount) {
         null
     } else {
@@ -224,6 +238,46 @@ export const UserGarage = () => {
       }
   };
 
+  const buttonHandlerRegisterCarSpecs = () => {
+    setError(null);
+
+    const carId =  profileData.user?.car[0]?.id
+      
+      if (validateCarSpecData(registerCarSpecData) === "empty object") {
+        setError("Ups! You didn't update anything!");
+        return;
+      } else if (validateCarSpecData(registerCarSpecData) === "only empty strings") {
+        setError("Ups! You didn't update anything!");
+        return;
+      } else if (keyValidator(registerCarSpecData, Object.keys(registerCarSpecData)) === null) {
+        setError("Ups! You finally didn't update anything!");
+      } else if (Object.keys(keyValidator(registerCarSpecData, Object.keys(registerCarSpecData))).length < 5) {
+        setError("Ups! You need to complete all fields!");
+      } else {
+        registerCarSpec(token, carId, registerCarSpecData).then(() => {
+            getClientProfile(token, id, paginationData).then((res) => {
+              setProfileData(res);
+              setPaginationData((prevState) => ({
+                ...prevState,
+                    carPage: Number(res.carPage),
+                    carLimit: Number(res.carLimit),
+                    inscPage: Number(res.inscPage),
+                    inscLimit: Number(res.inscLimit),
+                 }));
+              setItemsCount((prevState) => ({
+                    ...prevState,
+                    carCount: res.userCarsCount,
+                    inscCount: res.userInscsCount
+                }));
+              setCarSpecEditable(false);
+              setUpdateShow(true);
+            });
+          }).catch(() => {
+            setError("Ups! Try again!");
+          });
+      }
+  };
+
   const buttonHandlerSaveNewcar = () => {
     setError(null);
     registerNewCar(token, id, registerNewCarData).then(() => {
@@ -249,7 +303,7 @@ export const UserGarage = () => {
   }
 
   useEffect(() => {console.log(profileData)},[profileData]);
-  useEffect(() => {console.log(registerNewCarData)},[registerNewCarData]);
+  useEffect(() => {console.log(registerCarSpecData)},[registerCarSpecData]);
 
   return (
     <div className="profileData">
@@ -289,7 +343,7 @@ export const UserGarage = () => {
           >
             <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z" />
           </svg>
-          <p>Garage</p>
+          {garageEditable === false ? (<p>Garage</p>) : <p>Go Back</p>}
         </Button>
         <Button
           className="garageButton"
@@ -308,7 +362,7 @@ export const UserGarage = () => {
           </svg>
           <p>Profile</p>
         </Button>
-        <Button className="garageButton" variant="dark">
+        <Button className="garageButton" variant="secondary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -359,14 +413,6 @@ export const UserGarage = () => {
                     name={"car_image"}
                     handler={inputHandlerNewCar}
                     ></CustomInput>
-                    {/* FUNCIONALIDAD EN CURSO */}
-                    {/* <p style={{ margin: "0" }}>Drop your car image here:</p>
-                    <CustomInput
-                    type={"file"}
-                    name={"car_image"}
-                    value={"Drop your car image here"}
-                    handler={inputHandlerNewCar}
-                    ></CustomInput> */}
                     {error ? (<p className="error">{error}</p>) : null}
                     {JSON.stringify(registerNewCarData) !== '{}' ? (
                     <Button variant="success" onClick={() => buttonHandlerSaveNewcar()}>Save New Car</Button>
@@ -469,7 +515,45 @@ export const UserGarage = () => {
                     ></CustomInput>
                     {error ? (<p className="error">{error}</p>) : null}
                     {JSON.stringify(updateCarSpecData) !== '{}' ? (
-                    <Button variant="success" onClick={() => buttonHandlerSaveCarSpecs()}>Save New Specs</Button>
+                    <Button variant="success" onClick={() => buttonHandlerSaveCarSpecs()}>Update Specs</Button>
+                    ):null}
+                </Card>
+            ) : null}
+            {carSpecEditable === true && profileData.user?.car[0]?.carSpec === null? (
+                <Card className="carSpecEdit" id="carSpecEditForm">
+                    <CustomInput 
+                    placeholder={"AERO"}
+                    type={"text"}
+                    name={"car_aero"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"ENGINE"}
+                    type={"text"}
+                    name={"car_engine"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"SUSPENSION"}
+                    type={"text"}
+                    name={"car_suspension"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"TIRES"}
+                    type={"text"}
+                    name={"car_tires"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    <CustomInput
+                    placeholder={"DIFFERENTIAL"}
+                    type={"text"}
+                    name={"car_differential"}
+                    handler={inputHandlerCarSpec}
+                    ></CustomInput>
+                    {error ? (<p className="error">{error}</p>) : null}
+                    {JSON.stringify(registerCarSpecData) !== '{}' ? (
+                    <Button variant="success" onClick={() => buttonHandlerRegisterCarSpecs()}>Save Your Specs</Button>
                     ):null}
                 </Card>
             ) : null}

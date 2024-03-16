@@ -71,3 +71,15 @@ export const registerNewCar = async (token, id, data) => {
     
     return res;
 }
+
+export const registerCarSpec = async (token, id, data) => {
+    console.log(data)
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    }
+    const res = await axios.post(`${API_URL}/api/carspec/register-carSpec-car/${id}`, data, config);
+    
+    return res;
+}
