@@ -21,6 +21,8 @@
     margin-bottom: 1em;
 }
 
+
 .error{
     color: rgba(255, 0, 0, 0.711);
+    margin: 0;
 }

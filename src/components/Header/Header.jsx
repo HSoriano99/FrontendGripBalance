@@ -67,8 +67,11 @@ export const Header = () => {
       password: registerData.password,
     };
     
-    if (registerData.password !== "" && registerData.email !== "" && registerData.username !== ""){
-
+    if (keyValidator(registerData, Object.keys(registerData)) === null) {
+      setError("Please, enter all fields")
+    } else if (Object.keys(keyValidator(registerData, Object.keys(registerData))).length < 3){
+      setError("Please, all fields are required")
+    } else {
         clientRegister(registerData).then(() => {
         //hacemos login con el usuario recien creado cuando tengamos la respuesta de nuestro registro correctamente
         userLogin(credentials)
@@ -87,9 +90,8 @@ export const Header = () => {
 
         }).catch(() => setError("Failed to login after register!"));
     }).catch(() => setError("Username or email already in use!"));
-  }else {
-    setError("All fields are required!");
-  }}
+  }
+}
 
   const loginHandler = (event) => {
     setCredentials((prevState) => ({
@@ -183,9 +185,6 @@ export const Header = () => {
                   handler={registerHandler}
                 ></CustomInput>
                 {error !== null ? (
-                    <p className="error">{error}</p>
-                ): null}
-                {error !== null? (
                     <p className="error">{error}</p>
                 ): null}
               </div>
