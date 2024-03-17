@@ -13,13 +13,13 @@ import { login, logout, userData } from "../../pages/userSlice";
 import { CustomInput } from "../../components/CustomInput/CustomInput";
 import { clientRegister, userLogin } from "../../services/ApiCalls";
 import { jwtDecode } from "jwt-decode";
+import { keyValidator } from "../../validations";
 
 export const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [smShow, setSmShow] = useState(false);
-  const [errorShow, setErrorShow] = useState(false);
-  const [error2Show, setError2Show] = useState(false);
+  const [error, setError] = useState(null);
   const [modalForm, setModalForm] = useState();
   const [registerData, setRegisterData] = useState({
     username: "",
@@ -49,12 +49,11 @@ export const Header = () => {
     const form = e.form;
     setModalForm(form);
     setSmShow(true);
-    setErrorShow(false);
+    setError(null);
   };
 
   const registerHandler = (event) => {
-    setError2Show(false);
-    setErrorShow(false);
+    setError(null);
     setRegisterData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
@@ -74,7 +73,6 @@ export const Header = () => {
         //hacemos login con el usuario recien creado cuando tengamos la respuesta de nuestro registro correctamente
         userLogin(credentials)
         .then((token) => {
-            
             const decodedToken = jwtDecode(token);
 
             const data = {
@@ -87,10 +85,10 @@ export const Header = () => {
             navigate("/profile");
             setSmShow(false);
 
-        }).catch((err) => setErrorShow(true));
-    }).catch((err) => setError2Show(true));
+        }).catch(() => setError("Failed to login after register!"));
+    }).catch(() => setError("Username or email already in use!"));
   }else {
-    setErrorShow(true);
+    setError("All fields are required!");
   }}
 
   const loginHandler = (event) => {
@@ -101,7 +99,12 @@ export const Header = () => {
   };
 
   const buttonLoginHandler = () => {
-    userLogin(credentials)
+    if (keyValidator(credentials, Object.keys(credentials)) === null) {
+      setError("Please, enter your email and password")
+    } else if (Object.keys(keyValidator(credentials, Object.keys(credentials))).length < 2){
+      setError("Please, email and password are required")
+    } else {
+      userLogin(credentials)
       .then((token) => {
 
         const decodedToken = jwtDecode(token);
@@ -113,7 +116,9 @@ export const Header = () => {
         dispatch(login({ credentials: data }));
         navigate("/profile");
         setSmShow(false);
-      }).catch((err) => setErrorShow(true));
+      }).catch(() => setError("Sorry, try again!"));
+    }
+    
   };
 
   return (
@@ -152,8 +157,8 @@ export const Header = () => {
                   name={"password"}
                   handler={loginHandler}
                 ></CustomInput>
-                {errorShow ? (
-                    <p className="error">Nope! Try again!</p>
+                {error !== null ? (
+                    <p className="error">{error}</p>
                 ): null}
               </div>
             ) : null}
@@ -177,11 +182,11 @@ export const Header = () => {
                   name={"password"}
                   handler={registerHandler}
                 ></CustomInput>
-                {errorShow ? (
-                    <p className="error">Nope! Try again!</p>
+                {error !== null ? (
+                    <p className="error">{error}</p>
                 ): null}
-                {error2Show ? (
-                    <p className="error">Username or email already in use!</p>
+                {error !== null? (
+                    <p className="error">{error}</p>
                 ): null}
               </div>
             ) : null}
@@ -207,7 +212,6 @@ export const Header = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                {/* <Nav.Link href="/">Home</Nav.Link> */}
                 <Nav.Link href="/events">Events</Nav.Link>
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   {!token ? (
