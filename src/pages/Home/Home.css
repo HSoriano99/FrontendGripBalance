@@ -1,11 +1,10 @@
-/* Estilos para las imágenes de los coches */
+
 .img-fluid {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
   }
   
-  /* Estilos para el título de bienvenida */
   .text-center {
     text-align: center;
     font-size: 2rem;
@@ -13,40 +12,37 @@
     margin-bottom: 20px;
   }
   
-  /* Estilos para el contenedor principal */
   .container {
     padding: 20px;
   }
   
-  /* Estilos para las columnas */
   .col {
     padding: 0 15px;
   }
   
-  /* Estilos para el margen inferior de las columnas */
   .mb-4 {
     margin-bottom: 20px;
   }
 
   .event-card {
-    height: 100%; /* Ajusta la altura de todas las tarjetas */
-    border-radius: 15px; /* Ajusta el radio de borde para un efecto redondeado */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Agrega una sombra suave */
+    height: 100%; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   }
   
   .event-card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Cambia la sombra al pasar el ratón */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
   }
   
   .card-body {
-    padding: 20px; /* Ajusta el relleno del cuerpo de la tarjeta */
+    padding: 20px; 
   }
   
   .card-title {
-    font-weight: bold; /* Hace que el título de la tarjeta sea negrita */
+    font-weight: bold; 
   }
   
   .card-text {
-    color: #666; /* Cambia el color del texto del cuerpo de la tarjeta */
+    color: #666; 
   }
   

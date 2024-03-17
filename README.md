@@ -1,6 +1,6 @@
 # Front APP REACT.JS GRIP BALANCE
 
-<div align="center">
+<!-- <div align="center">
   <img src="./src/img/registerGB.png" width=180em>
   <img src="./src/img/loginGB.png" width=180em>
   <img src="./src/img/profiledataGB.png" width=180em>
@@ -13,6 +13,11 @@
   <img src="./src/img/carspecsGB.png" width=180em>
   <img src="./src/img/logoutGB.png" width=180em>
   <h1>GRIP BALANCE</h1>
+</div> -->
+
+<div align="center">
+  <img src="./src/img/Home.png" width=900em>
+  <h1>GRIP BALANCE</h1>
 </div>
 
 <details>
@@ -21,7 +26,7 @@
     <li><a href="#objetivo">Objetivo</a></li>
     <li><a href="#sobre-el-proyecto">Sobre el proyecto</a></li>
     <li><a href="#stack">Stack</a></li>
-    <!-- <li><a href="#funcionalidades">Funcionalidades</a></li> -->
+    <li><a href="#funcionalidades">Funcionalidades</a></li>
     <li><a href="#instalación-en-local">Instalación</a></li>
     <li><a href="#futuras-funcionalidades">Futuras funcionalidades</a></li>
     <li><a href="#contribuciones">Contribuciones</a></li>
@@ -42,6 +47,7 @@ Link repositorio del backend: https://github.com/HSoriano99/BackendGripBalance
 ## Sobre el proyecto
 
 Consiste en una aplicación web para eventos de motorsport. Contiene diferentes vistas, como Home donde encontrarás un breve resumen de los servicios que se ofrecen. Formulario de registro y login/logout desde el header, asi como navegar a la vista de eventos donde podremos visualizarlos y tener opción de inscribirnos en el caso de estar logueados. Vista de perfil de usuario donde tenemos un garaje virtual donde añadimos nuestros coches, incluimos caracteristicas tecnicas del vehiculo y las editamos para posteriormente inscribirse en los eventos en funcion de la compatibilidad con el evento. Como futuras funcionalidades podremos ver los inscritos en eventos pasados, ver sus coches y comparar sus caracteristicas o una vista como administrador con permisos únicos sobre usuarios y eventos.
+
 ## Stack
 
 Tecnologías utilizadas:
@@ -57,60 +63,47 @@ Tecnologías utilizadas:
 - TYPESCRIPT
 - TYPEORM
 
-<!-- ## Funcionalidades
+## Funcionalidades
 
-  <div>
-    <img src="./src/img/LoginRegister.png" width=180em>
-    <img src="./src/img/LoginForm.png" width=180em>
-    <img src="./src/img/Registerform.png" width=180em>
+  <div align="center">
+    <img src="./src/img/loginGB.png" width=180em>
+    <img src="./src/img/registerGB.png" width=180em>
+    <img src="./src/img/logoutGB.png" width=180em>
   </div>
 
 
 <details>
   <summary>Cliente 🙋🏽‍♂️</summary>
   <ol>
-    <li>🔐 Registro / Login</li>
-    <li>📝 Editar datos de perfil</li>
-    <li>👀 Consultar sus citas concertadas con información del artista</li>
-    <li>💉📆 Ver los artistas disponibles y crear citas nuevas</li>
+    <li>🔐 Registro / Login / Logout</li>
+    <li>📝 Editar datos de perfil / Cambio de contraseña</li>
+    <li>👀 Consultar su garaje</li>
+    <li>🏎️ Añadir coches a su garaje</li>
+    <li>🔩 Añadir o editar las características de cada coche</li>
   </ol>
-  <div >
-    <img src="./src/img/PerfilClient.png" width=180em>
-    <img src="./src/img/EditableUserData.png" width=180em>
-    <img src="./src/img/CitasClient.png" width=180em>
-    <img src="./src/img/NewCita1.png" width=180em>
-    <img src="./src/img/NewCita2.png" width=180em>
+  <div align="center">
+    <img src="./src/img/profileGB.png" width=180em>
+    <img src="./src/img/profiledataGB.png" width=180em>
+    <img src="./src/img/passwordGB.png" width=180em>
+    <img src="./src/img/newcarbuttonGB.png" width=180em>
+  </div>
+  <div align="center">
+    <img src="./src/img/newcarGB.png" width=180em>
+    <img src="./src/img/newcarspecsGB.png" width=180em>
+    <img src="./src/img/cardetailsGB.png" width=180em>
+    <img src="./src/img/carspecsGB.png" width=180em>
   </div>
 </details>
 <details>
-  <summary>Artista 🦹🏼</summary>
-  <ol>
-    <li>🔐 Login</li>
-    <li>📝 Editar datos de perfil</li>
-    <li>👀 Consultar sus citas concertadas con información del cliente</li>
-  </ol>
-  <div >
-    <img src="./src/img/ArtistProfile.png" width=180em>
-    <img src="./src/img/CitasArtist.png" width=180em>
+  <summary> Gestión de errores ❌</summary>
+  <div align="center">
+    <img src="./src/img/errorexample1.png" width=180em>
+    <img src="./src/img/errorexample4.png" width=180em>
+    <img src="./src/img/errorexample3.png" width=180em>
+    <img src="./src/img/errorexample2.png" width=180em>
   </div>
+  
 </details>
-<details>
-  <summary>Admin 🕵🏻‍♂️</summary>
-  <ol>
-    <li>🔐 Login</li>
-    <li>📝 Editar datos de perfil</li>
-    <li>🔎 Consultar todos los usuarios de la aplicación y posibilidad de eliminar usuarios</li>
-    <li>🔎📝 Consultar todas las citas de la aplicación y posibilidad de modificarlas o eliminarlas</li>
-  </ol>
-  <div >
-    <img src="./src/img/AdminProfile.png" width=180em>
-    <img src="./src/img/GestiónEstudio.png" width=180em>
-    <img src="./src/img/DeleteUsers.png" width=180em>
-    <img src="./src/img/ModifCitas.png" width=180em>
-    <img src="./src/img/ModifCitas2.png" width=180em>
-  </div>
-</details> -->
-
 
 ## Puesta en marcha
 
@@ -126,8 +119,8 @@ Tecnologías utilizadas:
 ## Futuras funcionalidades
 
 [ ] Vista de admin, con permisos unicos sobre los eventos y los usuarios.
-[ ] ...
-[ ] ...
+[ ] Método nuevo de cambio de imagen de perfil (en proceso)
+[ ] Inscripciones a eventos en vista eventos y su muestra en sección eventos del perfil de los que estemos inscritos.
 
 ## Contribuciones
 
