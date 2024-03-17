@@ -65,37 +65,40 @@ Tecnologías utilizadas:
 
 ## Funcionalidades
 
-  <div align="center">
-    <img src="./src/img/loginGB.png" width=180em>
-    <img src="./src/img/registerGB.png" width=180em>
-    <img src="./src/img/logoutGB.png" width=180em>
-  </div>
-
-
 <details>
   <summary>Cliente 🙋🏽‍♂️</summary>
   <ol>
-    <li>🔐 Registro / Login / Logout</li>
-    <li>📝 Editar datos de perfil / Cambio de contraseña</li>
-    <li>👀 Consultar su garaje</li>
-    <li>🏎️ Añadir coches a su garaje</li>
-    <li>🔩 Añadir o editar las características de cada coche</li>
+    <li align="center">🔐 Registro / Login / Logout</li>
+      <div align="center">
+      <img src="./src/img/loginGB.png" width=180em>
+      <img src="./src/img/registerGB.png" width=180em>
+      <img src="./src/img/logoutGB.png" width=180em>
+      </div>
+      <br><br>
+    <li align="center">📝 Visualizar y editar datos de perfil / Cambio de contraseña</li>
+      <div align="center">
+      <img src="./src/img/profileGB.png" width=180em>
+      <img src="./src/img/profiledataGB.png" width=180em>
+      <img src="./src/img/passwordGB.png" width=180em>
+      </div>
+      <br><br>
+    <li align="center">🏎️ 🔩 Añadir coches a su garaje y añadir las características de cada coche</li>
+      <div align="center">
+      <img src="./src/img/newcarbuttonGB.png" width=180em>
+      <img src="./src/img/newcarGB.png" width=180em>
+      <img src="./src/img/newcarspecsGB.png" width=180em>
+      </div>
+      <br><br>
+    <li align="center">👀 Consultar su garaje, visualizar y editar las características de cada coche</li>
+      <div align="center">
+      <img src="./src/img/cardetailsGB.png" width=180em>
+      <img src="./src/img/carspecsGB.png" width=180em>
+      </div>
+      <br><br>
   </ol>
-  <div align="center">
-    <img src="./src/img/profileGB.png" width=180em>
-    <img src="./src/img/profiledataGB.png" width=180em>
-    <img src="./src/img/passwordGB.png" width=180em>
-    <img src="./src/img/newcarbuttonGB.png" width=180em>
-  </div>
-  <div align="center">
-    <img src="./src/img/newcarGB.png" width=180em>
-    <img src="./src/img/newcarspecsGB.png" width=180em>
-    <img src="./src/img/cardetailsGB.png" width=180em>
-    <img src="./src/img/carspecsGB.png" width=180em>
-  </div>
 </details>
 <details>
-  <summary> Gestión de errores ❌</summary>
+  <summary> Algunos ejemplos de gestión de errores ❌</summary>
   <div align="center">
     <img src="./src/img/errorexample1.png" width=180em>
     <img src="./src/img/errorexample4.png" width=180em>
