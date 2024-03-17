@@ -122,7 +122,6 @@ export const UserGarage = () => {
         null
     } else {
         const carPage = paginationData.carPage -1
-        console.log(paginationData)
         getClientProfile(token, id, { ...paginationData, carPage: carPage }).then((res) => {
             setProfileData(res);
             // Actualizar paginationData con los valores convertidos
@@ -150,7 +149,6 @@ export const UserGarage = () => {
         null
     } else {
         const carPage = paginationData.carPage +1
-        console.log(paginationData)
         getClientProfile(token, id, { ...paginationData, carPage: carPage }).then((res) => {
             setProfileData(res);
             // Actualizar paginationData con los valores convertidos
@@ -243,14 +241,8 @@ export const UserGarage = () => {
 
     const carId =  profileData.user?.car[0]?.id
       
-      if (validateCarSpecData(registerCarSpecData) === "empty object") {
-        setError("Ups! You didn't update anything!");
-        return;
-      } else if (validateCarSpecData(registerCarSpecData) === "only empty strings") {
-        setError("Ups! You didn't update anything!");
-        return;
-      } else if (keyValidator(registerCarSpecData, Object.keys(registerCarSpecData)) === null) {
-        setError("Ups! You finally didn't update anything!");
+      if (keyValidator(registerCarSpecData, Object.keys(registerCarSpecData)) === null) {
+        setError("Ups! You finally didn't keep anything!");
       } else if (Object.keys(keyValidator(registerCarSpecData, Object.keys(registerCarSpecData))).length < 5) {
         setError("Ups! You need to complete all fields!");
       } else {
@@ -280,6 +272,11 @@ export const UserGarage = () => {
 
   const buttonHandlerSaveNewcar = () => {
     setError(null);
+    if (keyValidator(registerNewCarData, Object.keys(registerNewCarData)) === null) {
+      setError("Ups! You finally didn't keep anything!");
+    } else if (Object.keys(keyValidator(registerNewCarData, Object.keys(registerNewCarData))).length < 5) {
+      setError("Ups! You need to complete all fields!");
+    } else {
     registerNewCar(token, id, registerNewCarData).then(() => {
       getClientProfile(token, id, paginationData).then((res) => {
         setProfileData(res);
@@ -300,10 +297,7 @@ export const UserGarage = () => {
     }).catch(() => {
       setError("Ups! Try again!");
     });
-  }
-
-  useEffect(() => {console.log(profileData)},[profileData]);
-  useEffect(() => {console.log(registerCarSpecData)},[registerCarSpecData]);
+  }}
 
   return (
     <div className="profileData">
@@ -362,7 +356,7 @@ export const UserGarage = () => {
           </svg>
           <p>Profile</p>
         </Button>
-        <Button className="garageButton" variant="secondary">
+        <Button className="garageButton" variant="dark">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

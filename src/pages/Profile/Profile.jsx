@@ -50,9 +50,7 @@ export const Profile = () => {
           targetElement.scrollIntoView({ behavior: 'smooth' });
         }
       }
-
       getClientProfile(token, id, paginationData).then((res) => {
-        console.log(res);
           setProfileData(res);
           setPaginationData({carCount: res.userCarsCount, inscCount: res.userInscsCount});
         }
@@ -212,7 +210,7 @@ export const Profile = () => {
             </svg>
             {profileEditable === false ? (<p>Profile</p>) : <p>Go Back</p>}
           </Button>
-          <Button className="garageButton" variant="secondary">
+          <Button className="garageButton" variant="dark">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -239,14 +237,10 @@ export const Profile = () => {
            <Button variant="danger" href = "#profileEditForm" onClick={() => editHandlerPassword()}>
               Go back!
            </Button>
-        }
-            
+        }  
         {profileEditable === true ? (
-
           <Card className="profileEditForm" id="profileEditForm">
-            {/* <Button variant="primary" href = "#profileEditForm" onClick={() => editHandlerPassword()}>
-              Change your password here!
-            </Button> */}
+            
             <CustomInput
               placeholder={profileData.user?.username || "Username"}
               type={"username"}

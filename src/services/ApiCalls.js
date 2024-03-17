@@ -61,7 +61,6 @@ export const updateCarSpec = async (token, id, data) => {
 }
 
 export const registerNewCar = async (token, id, data) => {
-    console.log(data)
     const config = {
         headers: {
             Authorization: 'Bearer ' + token
@@ -73,7 +72,6 @@ export const registerNewCar = async (token, id, data) => {
 }
 
 export const registerCarSpec = async (token, id, data) => {
-    console.log(data)
     const config = {
         headers: {
             Authorization: 'Bearer ' + token
