@@ -63,6 +63,20 @@
     border-radius: 50%;
   }
 
+  .imageButton {
+    display: flex;
+    height: 2em;
+    width: 2em;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+    position:relative;
+    right: -4.5em;
+    bottom: -2.5em;
+    z-index: 1;
+  }
+
   .pageButtonHide.btn.btn-secondary {
     display: flex;
     height: 2em;
@@ -175,6 +189,9 @@
     .newCarButton {
       width: 400px;
     }
+    .imageButton {
+      right: -3.5em;
+    }
   }
   
   /* Estilos para pantallas pequeñas */
@@ -195,6 +212,9 @@
     }
     .newCarButton {
       width: 300px;
+    }
+    .imageButton {
+      right: -2.5em;
     }
   }
 
