@@ -89,7 +89,7 @@ export const Header = () => {
             setSmShow(false);
 
         }).catch(() => setError("Failed to login after register!"));
-    }).catch(() => setError("Username or email already in use!"));
+    }).catch(() => setError("Username or email are probably in use!"));
   }
 }
 
