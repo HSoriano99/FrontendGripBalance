@@ -329,7 +329,7 @@ export const UserGarage = () => {
     } else {
       registerNewCar(token, id, registerNewCarData)
         .then(() => {
-          const carPage = paginationData.carPage + 1;
+          const carPage = itemsCount.carCount + 1;
           getClientProfile(token, id, { ...paginationData, carPage: carPage}).then((res) => {
             setProfileData(res);
             setPaginationData((prevState) => ({
