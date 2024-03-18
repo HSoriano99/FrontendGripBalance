@@ -81,3 +81,14 @@ export const registerCarSpec = async (token, id, data) => {
     
     return res;
 }
+
+export const deleteUserCar = async (token, id) => {
+    const config = {
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    }
+    const res = await axios.delete(`${API_URL}/api/cars/delete-user-car/${id}`, config);
+    
+    return res;
+}
